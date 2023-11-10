@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: app
+    image: app
+    build:
+      context: ./docker/app/build
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    command: tail -f /dev/null
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: db
+    ports:
+      - 3306:3306
+    build:
+      context: ./docker/db/build
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - TZ=${TZ}
+    volumes:
+      - entry-data:/var/lib/mysql
+    working_dir: /var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+volumes:
+  entry-data:
