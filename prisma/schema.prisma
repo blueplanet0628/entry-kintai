@@ -1,0 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: 
+model Company {
+  id          Int       @id                 @default(autoincrement())
+  name        String     @db.VarChar(255)
+  createdAt   DateTime   @default(now())     @map("created_at")
+  updatedAt   DateTime   @default(now())     @updatedAt                 @map("updated_at")
+  deletedAt   DateTime?  @map("deleted_at")  // @default(NULL)
+
+  shops       Shop[]
+  attendances Attendance[]
+}
+
+// NOTE: 
+model Shop {
+  id                 Int       @id                     @default(autoincrement())
+  companyId          Int        @map("company_id")
+  code               String     @db.VarChar(10)
+  type               Int        @db.TinyInt()
+  name               String     @db.VarChar(255)
+  phoneNumber1       String     @db.VarChar(13)         @map("phone_number1")
+  phoneNumber2       String?    @db.VarChar(13)         @map("phone_number2")       // @default(NULL)
+  phoneNumber3       String?    @db.VarChar(13)         @map("phone_number3")       // @default(NULL)
+  phoneNumber4       String?    @db.VarChar(13)         @map("phone_number4")       // @default(NULL)
+  addressPostcode    String     @db.VarChar(8)          @map("address_postcode")
+  addressPrefecture  String     @db.VarChar(8)          @map("address_prefecture")
+  addressCity        String     @db.VarChar(255)        @map("address_city")
+  addressBlock       String     @db.VarChar(255)        @map("address_block")
+  addressBuilding    String?    @db.VarChar(255)        @map("address_building")    // @default(NULL)
+  shiftPeriod        Int        @db.TinyInt()          @map("shift_period")
+  shiftDeadline      Int        @map("shift_deadline")
+  is_enabled         Boolean    @db.TinyInt()
+  createdAt          DateTime   @default(now())         @map("created_at")
+  updatedAt          DateTime   @default(now())         @updatedAt                  @map("updated_at")
+  deletedAt          DateTime?  @map("deleted_at")      // @default(NULL)
+
+  shop_users           Shop_user[]
+  attendances          Attendance[]
+  fare_between_stores  Fare_between_store[]
+  company              Company   @relation(fields: [companyId], references: [id])
+}
+
+// NOTE: 追加
+model Account {
+  id                 Int   @id       @default(autoincrement())
+  userId             Int
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+// NOTE: 追加
+model Session {
+  id            Int    @id      @default(autoincrement())
+  sessionToken  String    @unique
+  userId        Int
+  expires       DateTime
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// TODO: 不要なカラムは後で削除
+model User {
+  id                   Int     @id                        @default(autoincrement())
+  email                String?    @unique
+  password             String     @db.VarChar(255)
+  emailVerified        DateTime?  // NOTE: 追加
+  employmentStatus     Int        @db.TinyInt()             @map("employment_status")
+  lastName             String     @db.VarChar(255)           @map("last_name")
+  firstName            String     @db.VarChar(255)           @map("first_name")
+  lastNameKana         String     @db.VarChar(255)           @map("last_name_kana")
+  firstNameKana        String     @db.VarChar(255)           @map("first_name_kana")
+  nickname             String?    @db.VarChar(255)           // @default(NULL)
+  addressPostcode      String     @db.VarChar(8)             @map("address_postcode")
+  addressPrefecture    String     @db.VarChar(8)             @map("address_prefecture")
+  addressCity          String     @db.VarChar(255)           @map("address_city")
+  addressBlock         String     @db.VarChar(255)           @map("address_block")
+  addressBuilding      String?    @db.VarChar(255)           @map("address_building")       // @default(NULL)
+  phoneNumber1         String     @db.VarChar(13)            @map("phone_number1")
+  phoneNumber2         String?    @db.VarChar(13)            @map("phone_number2")          // @default(NULL)
+  birthday             DateTime   @db.Date()
+  gender               Int        @db.TinyInt()
+  employeeCode         String     @db.VarChar(10)            @map("employee_code")
+  role                 Int
+  start_date           DateTime?  @db.Date()                // @default(NULL)
+  last_date            DateTime?  @db.Date()                // @default(NULL)
+  retirement_reason    String?    // @default(NULL)
+  is_enabled           Boolean    @db.TinyInt()
+  wage                 Int        @db.TinyInt()
+  timeframe1StartTime  DateTime?  @db.Time(6)                @map("timeframe1_start_time")  // @default(NULL)
+  timeframe1EndTime    DateTime?  @db.Time(6)                @map("timeframe1_end_time")    // @default(NULL)
+  timeframe1Salary     Int        @map("timeframe1_salary")  @default(0)
+  timeframe2StartTime  DateTime?  @db.Time(6)                @map("timeframe2_start_time")  // @default(NULL)
+  timeframe2EndTime    DateTime?  @db.Time(6)                @map("timeframe2_end_time")    // @default(NULL)
+  timeframe2Salary     Int        @map("timeframe2_salary")  @default(0)
+  timeframe3StartTime  DateTime?  @db.Time(6)                @map("timeframe3_start_time")  // @default(NULL)
+  timeframe3EndTime    DateTime?  @db.Time(6)                @map("timeframe3_end_time")    // @default(NULL)
+  timeframe3Salary     Int        @map("timeframe3_salary")  @default(0)
+  fareSetting          Int        @db.TinyInt()             @map("fare_setting")
+  dailyRate            Int        @map("daily_rate")         @default(0)
+  fixedMonth           Int        @map("fixed_month")        @default(0)
+  nonPayment           Int        @map("non_payment")        @default(0)
+  bankName             String     @db.VarChar(255)           @map("bank_name")
+  bankCode             String     @db.Char(4)                @map("bank_code")
+  bankBranchName       String     @db.VarChar(255)           @map("bank_branch_name")
+  bankBranchCode       String     @db.Char(4)                @map("bank_branch_code")
+  bankAccountType      Int        @db.TinyInt()             @map("bank_account_type")
+  bankAccountNumber    String     @db.Char(10)               @map("bank_account_number")
+  bankAccountHolder    String     @db.VarChar(255)           @map("bank_account_holder")
+  createdAt            DateTime   @default(now())            @map("created_at")
+  updatedAt            DateTime   @default(now())            @updatedAt                     @map("updated_at")
+  deletedAt            DateTime?  @map("deleted_at")         // @default(NULL)
+
+  accounts             Account[]  // NOTE: 追加
+  sessions             Session[]  // NOTE: 追加
+  shop_users           Shop_user[]
+  attendances          Attendance[]
+
+}
+
+// NOTE: 追加
+model VerificationToken {
+  identifier String
+  token      String    @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// NOTE: 
+model Shop_user {
+  shopId     Int       @map("shop_id")
+  userId     Int       @map("user_id")
+  createdAt  DateTime  @default(now())     @map("created_at")
+  updatedAt  DateTime  @default(now())     @updatedAt                 @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")  // @default(NULL)
+
+  shop       Shop?     @relation(fields: [shopId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@id([shopId, userId])
+}
+
+// NOTE: 
+model Attendance {
+  id         Int        @id                 @default(autoincrement())
+  companyId  Int        @map("company_id")
+  shopId     Int        @map("shop_id")
+  userId     Int        @map("user_id")
+  clockIn1   DateTime?  @map("clock_in1")   // @default(NULL)
+  clockOut1  DateTime?  @map("clock_out1")  // @default(NULL)
+  clockIn2   DateTime?  @map("clock_in2")   // @default(NULL)
+  clockOut2  DateTime?  @map("clock_out2")  // @default(NULL)
+  createdAt  DateTime   @default(now())     @map("created_at")
+  updatedAt  DateTime   @default(now())     @updatedAt          @map("updated_at")
+  deletedAt  DateTime?  @map("deleted_at")  // @default(NULL)
+
+  company    Company?  @relation(fields: [companyId], references: [id])
+  shop       Shop?     @relation(fields: [shopId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+}
+
+// NOTE: 
+model Fare_between_store {
+  id         Int        @id                 @default(autoincrement())
+  shop1Id    Int        @map("shop1_id")
+  shop2Id    Int        @map("shop2_id")
+  fare       Int        @default(0)
+  createdAt  DateTime   @default(now())     @map("created_at")
+  updatedAt  DateTime   @default(now())     @updatedAt          @map("updated_at")
+  deletedAt  DateTime?  @map("deleted_at")  // @default(NULL)
+
+  shop1      Shop      @relation(fields: [shop1Id], references: [id])
+
+  @@unique([shop1Id, shop2Id])
+  }

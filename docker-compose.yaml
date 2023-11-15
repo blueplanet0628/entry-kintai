@@ -27,9 +27,9 @@ services:
       - MYSQL_DATABASE=${DB_DATABASE}
       - TZ=${TZ}
     volumes:
-      - entry-data:/var/lib/mysql
+      - kintai-data:/var/lib/mysql
     working_dir: /var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
 
 volumes:
-  entry-data:
+  kintai-data:
