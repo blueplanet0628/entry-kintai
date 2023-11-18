@@ -13,8 +13,6 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -127,7 +125,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
 							noWrap
 							sx={{ flexGrow: 1 }}
 						>
-							Dashboard
+							勤怠管理システム
 						</Typography>
 						<IconButton color="inherit">
 							<Badge badgeContent={4} color="secondary">
