@@ -1,6 +1,6 @@
 import { LoginButton, LogoutButton } from "@/app/components/buttons";
 import { getServerSession } from "next-auth/next";
-import { options } from "@/lib/prisma/options";
+import { options } from "@/lib/auth/options";
 
 export default async function Home() {
 	const session = await getServerSession(options);

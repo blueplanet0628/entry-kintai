@@ -1,8 +1,6 @@
-import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcrypt";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prismadb from "@/lib/prisma/prismadb";
+import { NextAuthOptions } from "next-auth";
 
 export const options: NextAuthOptions = {
 	debug: true,
@@ -20,17 +18,13 @@ export const options: NextAuthOptions = {
 			},
 			// メルアド認証処理
 			async authorize(credentials) {
-				const users = [
-					{ id: "1", email: "user1@example.com", password: "password1" },
-					{ id: "2", email: "user2@example.com", password: "password2" },
-					{ id: "3", email: "abc@abc", password: "123" },
-				];
-
 				const user = await prismadb.user.findUnique({
 					where: { email: credentials?.email },
 				});
 
-				//const user = users.find(user => user.email === credentials?.email);
+				if (!user || !user.password) {
+					throw new Error("Email does not exists");
+				}
 
 				if (user && user?.password === credentials?.password) {
 					return {

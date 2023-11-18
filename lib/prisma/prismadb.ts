@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from ".prisma/client";
 
 const prismaClientSingleton = () => {
 	return new PrismaClient();
@@ -14,4 +14,5 @@ const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
 export default prisma;
 
+// 本番環境以外では、ホットリロード時の余分なDBコネクションの生成を防ぐために、シングルトンを利用する
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
