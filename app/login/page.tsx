@@ -1,28 +1,25 @@
-import {
-    LoginButton,
-    LogoutButton,
-} from "@/app/components/buttons";
-import {getServerSession} from "next-auth/next";
-import {options} from "@/lib/options";
+import { LoginButton, LogoutButton } from "@/app/components/buttons";
+import { getServerSession } from "next-auth/next";
+import { options } from "@/lib/prisma/options";
 
 export default async function Home() {
-    const session = await getServerSession(options)
-    const user = session?.user // NOTE: ログインしていなければnull.
+	const session = await getServerSession(options);
+	const user = session?.user; // NOTE: ログインしていなければnull.
 
-    return (
-        <main
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "70vh",
-            }}
-        >
-            <div>
-                <div>{`${JSON.stringify(user)}`}</div>
-                {user ? <div>Logged in</div> : <div>Not logged in</div>}
-                {user ? <LogoutButton/> : <LoginButton/>}
-            </div>
-        </main>
-    );
+	return (
+		<main
+			style={{
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				height: "70vh",
+			}}
+		>
+			<div>
+				<div>{`${JSON.stringify(user)}`}</div>
+				{user ? <div>Logged in</div> : <div>Not logged in</div>}
+				{user ? <LogoutButton /> : <LoginButton />}
+			</div>
+		</main>
+	);
 }
