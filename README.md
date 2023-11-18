@@ -2,10 +2,10 @@
 
 ## セットアップ
 
-1. `npm install`
-2. .env.sampleをコピーして.envを作成
-3. docker compose up -d
-4. docker exec -it {コンテナ名} bash
+1. .env.sampleをコピーして.envを作成
+2. docker compose up -d
+3. docker exec -it {コンテナ名} bash
+4. `npm install`
 5. Prisma初期化
 `npx prisma generate`
 6. マイグレーション
@@ -13,8 +13,8 @@
 
 
 ## 起動
-1. docker exec -it {コンテナ名} bash
-2. npm run dev
+1. `docker exec -it {コンテナ名} bash`
+2. `npm run dev`
 
 
 ## Dockerについて
