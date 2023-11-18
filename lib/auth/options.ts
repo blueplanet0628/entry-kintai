@@ -1,6 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import prismadb from "@/lib/prisma/prismadb";
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
+import bcrypt from "bcrypt";
 
 export const options: NextAuthOptions = {
 	debug: true,
@@ -26,7 +27,13 @@ export const options: NextAuthOptions = {
 					throw new Error("Email does not exists");
 				}
 
-				if (user && user?.password === credentials?.password) {
+				const isCorrectPassword = await bcrypt.compare(
+					credentials.password,
+					user.password,
+				);
+
+				if (isCorrectPassword) {
+					console.log("ok");
 					return {
 						id: user.id,
 						name: user.email,
@@ -34,6 +41,7 @@ export const options: NextAuthOptions = {
 						role: "admin",
 					};
 				} else {
+					console.log("ng");
 					return null;
 				}
 			},
