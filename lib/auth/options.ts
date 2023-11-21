@@ -48,13 +48,11 @@ export const options: NextAuthOptions = {
 		}),
 	],
 	callbacks: {
-		jwt: async ({ token, user, account, profile, isNewUser }) => {
-			// 注意: トークンをログ出力してはダメです。
-			// console.log('in jwt', {user, token, account, profile})
-
+		jwt: async ({ token, user, account }) => {
 			if (user) {
-				token.user = user;
 				const u = user as any;
+				token.id = u.id;
+				token.user = user;
 				token.role = u.role;
 			}
 			if (account) {
@@ -62,12 +60,12 @@ export const options: NextAuthOptions = {
 			}
 			return token;
 		},
-		session: ({ session, token }) => {
-			// console.log("in session", {session, token});
+		session: ({ session, user, token, trigger, newSession }) => {
 			token.accessToken;
 			return {
 				...session,
 				user: {
+					id: token.id,
 					...session.user,
 					role: token.role,
 				},
