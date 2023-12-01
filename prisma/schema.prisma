@@ -10,6 +10,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO: リレーションは後日実装予定.
+model Shop {
+  id                 Int        @id                     @default(autoincrement())
+  companyId          Int        @map("company_id")
+  code               String     @db.VarChar(10)
+  type               Int        @db.TinyInt()
+  name               String     @db.VarChar(255)
+  phoneNumber1       String     @db.VarChar(13)         @map("phone_number1")
+  phoneNumber2       String?    @db.VarChar(13)         @map("phone_number2")       // @default(NULL)
+  phoneNumber3       String?    @db.VarChar(13)         @map("phone_number3")       // @default(NULL)
+  phoneNumber4       String?    @db.VarChar(13)         @map("phone_number4")       // @default(NULL)
+  addressPostcode    String     @db.VarChar(8)          @map("address_postcode")
+  addressPrefecture  String     @db.VarChar(8)          @map("address_prefecture")
+  addressCity        String     @db.VarChar(255)        @map("address_city")
+  addressBlock       String     @db.VarChar(255)        @map("address_block")
+  addressBuilding    String?    @db.VarChar(255)        @map("address_building")    // @default(NULL)
+  shiftPeriod        Int        @db.TinyInt()           @map("shift_period")
+  shiftDeadline      Int        @map("shift_deadline")
+  isEnabled          Boolean    @map("is_enabled")  @db.TinyInt()
+  createdAt          DateTime   @default(now())         @map("created_at")
+  updatedAt          DateTime   @default(now())         @updatedAt                  @map("updated_at")
+  deletedAt          DateTime?  @map("deleted_at")      // @default(NULL)
+}
+
 model Account {
   id                 String  @id @default(cuid())
   userId             String

@@ -2,25 +2,25 @@
 
 import { Box, Button, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import * as React from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import * as React from "react";
 
 export interface Input2Form {
-	shiftPeriod: string;
-	shiftDeadline: string;
-	isEnabled: boolean;
+	shiftPeriod: number;
+	shiftDeadline: number;
+	isEnabled: number;
 }
 
 function Input2(props: any) {
 	const { control, handleSubmit, setValue } = useForm<Input2Form>({
 		defaultValues: {
-			shiftPeriod: "",
-			shiftDeadline: "",
-			isEnabled: "",
+			shiftPeriod: 0,
+			shiftDeadline: 0,
+			isEnabled: 1, // NOTE: デフォルト:有効
 		},
 	});
 
@@ -74,10 +74,8 @@ function Input2(props: any) {
 								</span>
 								<TextField
 									{...field}
-									sx={{ width: "5%", mt: 1, mb: 1 }}
-									type="text"
-
-									//fullWidth
+									sx={{ width: "7.5%", mt: 1, mb: 1 }}
+									type="number"
 								/>
 								<span style={{ position: "relative", top: "25px" }}>
 									日前の営業終了時間

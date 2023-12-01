@@ -13,33 +13,33 @@ import FormLabel from "@mui/material/FormLabel";
 import * as React from "react";
 
 export interface Input1Form {
-	type: string;
+	type: number;
 	name: string;
-	phone_number1: string;
-	phone_number2: string;
-	address_postcode: string;
-	address_prefecture: string;
-	address_city: string;
-	address_block: string;
-	address_building: string;
-	phone_number3: string;
-	phone_number4: string;
+	phoneNumber1: string;
+	phoneNumber2: string;
+	addressPostcode: string;
+	addressPrefecture: string;
+	addressCity: string;
+	addressBlock: string;
+	addressBuilding: string;
+	phoneNumber3: string;
+	phoneNumber4: string;
 }
 
 function Input1(props: any) {
 	const { control, handleSubmit, setValue } = useForm<Input1Form>({
 		defaultValues: {
-			type: "",
+			type: 0,
 			name: "",
-			phone_number1: "",
-			phone_number2: "",
-			address_postcode: "",
-			address_prefecture: "",
-			address_city: "",
-			address_block: "",
-			address_building: "",
-			phone_number3: "",
-			phone_number4: "",
+			phoneNumber1: "",
+			phoneNumber2: "",
+			addressPostcode: "",
+			addressPrefecture: "",
+			addressCity: "",
+			addressBlock: "",
+			addressBuilding: "",
+			phoneNumber3: "",
+			phoneNumber4: "",
 		},
 	});
 
@@ -95,7 +95,7 @@ function Input1(props: any) {
 					)}
 				/>
 				<Controller
-					name="phone_number1"
+					name="phoneNumber1"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -103,12 +103,11 @@ function Input1(props: any) {
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="電話番号1"
-							//fullWidth
 						/>
 					)}
 				/>
 				<Controller
-					name="phone_number2"
+					name="phoneNumber2"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -116,12 +115,11 @@ function Input1(props: any) {
 							sx={{ width: "30%", mt: 1, mr: 30, mb: 1 }}
 							type="text"
 							label="電話番号2"
-							//fullWidth
 						/>
 					)}
 				/>
 				<Controller
-					name="address_postcode"
+					name="addressPostcode"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -129,12 +127,11 @@ function Input1(props: any) {
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="郵便番号"
-							//fullWidth
 						/>
 					)}
 				/>
 				<Controller
-					name="address_prefecture"
+					name="addressPrefecture"
 					control={control}
 					render={({ field }) => (
 						<FormControl sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}>
@@ -194,7 +191,7 @@ function Input1(props: any) {
 					)}
 				/>
 				<Controller
-					name="address_city"
+					name="addressCity"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -202,12 +199,11 @@ function Input1(props: any) {
 							sx={{ width: "61.5%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="市区町村"
-							//fullWidth
 						/>
 					)}
 				/>
 				<Controller
-					name="address_block"
+					name="addressBlock"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -215,12 +211,11 @@ function Input1(props: any) {
 							sx={{ width: "37%", mt: 1, mb: 1 }}
 							type="text"
 							label="番地"
-							//fullWidth
 						/>
 					)}
 				/>
 				<Controller
-					name="address_building"
+					name="addressBuilding"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -233,7 +228,7 @@ function Input1(props: any) {
 					)}
 				/>
 				<Controller
-					name="phone_number3"
+					name="phoneNumber3"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -241,12 +236,11 @@ function Input1(props: any) {
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="電話番号1"
-							//fullWidth
 						/>
 					)}
 				/>
 				<Controller
-					name="phone_number4"
+					name="phoneNumber4"
 					control={control}
 					render={({ field }) => (
 						<TextField
@@ -254,7 +248,6 @@ function Input1(props: any) {
 							sx={{ width: "30%", mt: 1, mr: 50, mb: 1 }}
 							type="text"
 							label="電話番号2"
-							//fullWidth
 						/>
 					)}
 				/>

@@ -20,17 +20,17 @@ function Confirm(props: any) {
 			body: JSON.stringify({
 				type: props.formValue.Input1Form.type,
 				name: props.formValue.Input1Form.name,
-				phone_number1: props.formValue.Input1Form.phone_number1,
-				phone_number2: props.formValue.Input1Form.phone_number2,
-				phone_number3: props.formValue.Input1Form.phone_number3,
-				phone_number4: props.formValue.Input1Form.phone_number4,
-				address_postcode: props.formValue.Input1Form.address_postcode,
-				address_prefecture: props.formValue.Input1Form.address_prefecture,
-				address_city: props.formValue.Input1Form.address_city,
-				address_block: props.formValue.Input1Form.address_block,
-				address_building: props.formValue.Input1Form.address_building,
+				phoneNumber1: props.formValue.Input1Form.phoneNumber1,
+				phoneNumber2: props.formValue.Input1Form.phoneNumber2,
+				phoneNumber3: props.formValue.Input1Form.phoneNumber3,
+				phoneNumber4: props.formValue.Input1Form.phoneNumber4,
+				addressPostcode: props.formValue.Input1Form.addressPostcode,
+				addressPrefecture: props.formValue.Input1Form.addressPrefecture,
+				addressCity: props.formValue.Input1Form.addressCity,
+				addressBlock: props.formValue.Input1Form.addressBlock,
+				addressBuilding: props.formValue.Input1Form.addressBuilding,
 				shiftPeriod: props.formValue.Input2Form.shiftPeriod,
-				shiftDeadline: props.formValue.Input2Form.shiftDeadline,
+				shiftDeadline: Number(props.formValue.Input2Form.shiftDeadline),
 				isEnabled: props.formValue.Input2Form.isEnabled,
 			}),
 		});
@@ -40,7 +40,6 @@ function Confirm(props: any) {
 		} else {
 			console.log("error");
 		}
-		console.log(props.formState);
 	};
 
 	return (
@@ -77,55 +76,55 @@ function Confirm(props: any) {
 										<TableRow>
 											<TableCell>電話番号1</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.phone_number1}
+												{props.formValue.Input1Form.phoneNumber1}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>電話番号2</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.phone_number2}
+												{props.formValue.Input1Form.phoneNumber2}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>郵便番号</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.address_postcode}
+												{props.formValue.Input1Form.addressPostcode}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>都道府県</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.address_prefecture}
+												{props.formValue.Input1Form.addressPrefecture}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>市区町村</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.address_city}
+												{props.formValue.Input1Form.addressCity}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>番地</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.address_block}
+												{props.formValue.Input1Form.addressBlock}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>建物名</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.address_building}
+												{props.formValue.Input1Form.addressBuilding}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>電話番号1</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.phone_number3}
+												{props.formValue.Input1Form.phoneNumber3}
 											</TableCell>
 										</TableRow>
 										<TableRow>
 											<TableCell>電話番号2</TableCell>
 											<TableCell>
-												{props.formValue.Input1Form.phone_number4}
+												{props.formValue.Input1Form.phoneNumber4}
 											</TableCell>
 										</TableRow>
 										<TableRow>
