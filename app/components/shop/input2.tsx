@@ -1,13 +1,12 @@
 "use client";
 
 import { Box, Button, TextField } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import * as React from "react";
+import { Controller, useForm } from "react-hook-form";
 
 export interface Input2Form {
 	shiftPeriod: number;

@@ -1,7 +1,6 @@
-import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
-import prismadb from "@/lib/prisma/prismadb";
+// import prismadb from "@/lib/prisma/prismadb";
 
 // sample
 export const GET = async (req: Request, res: NextResponse) => {

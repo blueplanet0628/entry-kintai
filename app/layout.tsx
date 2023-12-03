@@ -1,7 +1,7 @@
+import Dashboard from "@/app/components/dashboard";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Dashboard from "@/app/components/dashboard";
 
 const inter = Inter({ subsets: ["latin"] });
 
