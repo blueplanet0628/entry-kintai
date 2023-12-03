@@ -10,6 +10,7 @@ import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 export const mainListItems = (
 	<React.Fragment>
@@ -19,30 +20,38 @@ export const mainListItems = (
 			</ListItemIcon>
 			<ListItemText primary="シフト管理" />
 		</ListItemButton> */}
-		<ListItemButton href="/timecard">
-			<ListItemIcon>
-				<AssignmentIcon />
-			</ListItemIcon>
-			<ListItemText primary="タイムカード" />
-		</ListItemButton>
-		<ListItemButton href="/stamping">
-			<ListItemIcon>
-				<AlarmIcon />
-			</ListItemIcon>
-			<ListItemText primary="打刻" />
-		</ListItemButton>
-		<ListItemButton href="/staff">
-			<ListItemIcon>
-				<PeopleIcon />
-			</ListItemIcon>
-			<ListItemText primary="スタッフ設定" />
-		</ListItemButton>
-		<ListItemButton href="/shop">
-			<ListItemIcon>
-				<StoreIcon />
-			</ListItemIcon>
-			<ListItemText primary="店舗設定" />
-		</ListItemButton>
+		<Link href="/timecard">
+			<ListItemButton>
+				<ListItemIcon>
+					<AssignmentIcon />
+				</ListItemIcon>
+				<ListItemText primary="タイムカード" />
+			</ListItemButton>
+		</Link>
+		<Link href="/stamping">
+			<ListItemButton>
+				<ListItemIcon>
+					<AlarmIcon />
+				</ListItemIcon>
+				<ListItemText primary="打刻" />
+			</ListItemButton>
+		</Link>
+		<Link href="/staff">
+			<ListItemButton>
+				<ListItemIcon>
+					<PeopleIcon />
+				</ListItemIcon>
+				<ListItemText primary="スタッフ設定" />
+			</ListItemButton>
+		</Link>
+		<Link href="/shop">
+			<ListItemButton>
+				<ListItemIcon>
+					<StoreIcon />
+				</ListItemIcon>
+				<ListItemText primary="店舗設定" />
+			</ListItemButton>
+		</Link>
 	</React.Fragment>
 );
 
