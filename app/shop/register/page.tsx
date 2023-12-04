@@ -9,12 +9,12 @@ import {
 	Stepper,
 	Typography,
 } from "@mui/material";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
+import Confirm from "@/app/components/shop/confirm";
 import Input1 from "@/app/components/shop/input1";
 import Optional from "@/app/components/shop/input2";
-import Confirm from "@/app/components/shop/confirm";
 
 const steps = ["基本情報", "シフト設定", "確認"];
 

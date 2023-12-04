@@ -1,6 +1,6 @@
 import { LoginButton, LogoutButton } from "@/app/components/buttons";
-import { getServerSession } from "next-auth/next";
 import { options } from "@/lib/auth/options";
+import { getServerSession } from "next-auth/next";
 
 export default async function Home() {
 	const session = await getServerSession(options);
