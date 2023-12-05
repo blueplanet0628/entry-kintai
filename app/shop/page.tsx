@@ -1,47 +1,66 @@
 "use client";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Box } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { useEffect, useState } from "react";
 
 const Shop = () => {
 	const router = useRouter();
+	const [shopRows, setShopRows] = useState([]);
 
-	//prismaからデータ取る処理をここで書く？で、最後のreturnでデータを返す
+	// NOTE: Shopテーブルデータ取得処理(Shopテーブルからデータを取得し,画面に件数分データを表示させる為の準備処理)
+	useEffect(() => {
+		const fetchShopRows = async () => {
+			const response = await fetch("/api/auth/shop", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			const responseData = await response.json();
+			const shopRows = responseData.shop;
+			setShopRows(shopRows);
+		};
+		fetchShopRows();
+	});
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	// NOTE: 店舗削除処理
+	const deleteShopSubmit = async (e) => {
 		e.preventDefault();
 
-		const data = new FormData(e.currentTarget);
-
-		const response = await fetch("/api/auth/account", {
-			method: "POST",
+		const id = e.target.id;
+		const response = await fetch("/api/auth/shop", {
+			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				email: data.get("email"),
-				password: data.get("password"),
+				id: Number(id),
 			}),
 		});
 
 		if (response.ok) {
-			router.push("/");
+			router.push("/shop");
 		} else {
 			console.log("error");
 		}
 	};
 
 	return (
-		<Container component="main" maxWidth="xs">
+		<Box>
 			<CssBaseline />
 			<Box
 				sx={{
@@ -55,43 +74,67 @@ const Shop = () => {
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-					Shop
+					店舗設定
 				</Typography>
-				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-					<Grid container spacing={2}>
-						<Grid item xs={12}>
-							<TextField
-								required
-								fullWidth
-								id="email"
-								label="Eメールアドレス"
-								name="email"
-								autoComplete="email"
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								required
-								fullWidth
-								name="password"
-								label="パスワード"
-								type="password"
-								id="password"
-								autoComplete="new-password"
-							/>
-						</Grid>
-					</Grid>
-					<Button
-						type="submit"
-						fullWidth
-						variant="outlined"
-						sx={{ mt: 3, mb: 2 }}
-					>
-						変更
-					</Button>
-				</Box>
 			</Box>
-		</Container>
+			<Box my={2} flexDirection="row" justifyContent="flex-end" display="flex">
+				<Button variant="outlined" sx={{ align: "right" }}>
+					<Link href={{ pathname: "/shop/register" }}>新規登録</Link>
+				</Button>
+			</Box>
+			<TableContainer component={Paper} sx={{ mb: "100px" }}>
+				<Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+					<TableHead>
+						<TableRow>
+							<TableCell sx={{ display: "none" }}>ID</TableCell>
+							<TableCell align="center">店舗ID</TableCell>
+							<TableCell align="center">店舗名</TableCell>
+							<TableCell align="center">電話番号</TableCell>
+							<TableCell align="center">状態</TableCell>
+							<TableCell align="center">編集</TableCell>
+							<TableCell align="center">削除</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{shopRows.map((row) => (
+							<TableRow
+								key={row.name}
+								sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+							>
+								<TableCell component="th" scope="row" sx={{ display: "none" }}>
+									{row.id}
+								</TableCell>
+								<TableCell align="center">{row.code}</TableCell>
+								<TableCell align="center">{row.name}</TableCell>
+								<TableCell align="center">{row.phoneNumber1}</TableCell>
+								<TableCell align="center">
+									{row.isEnabled === true ? "有効" : "無効"}
+								</TableCell>
+								<TableCell align="center">
+									<Button variant="outlined">
+										<Link
+											href={{ pathname: "/shop/edit", query: { id: row.id } }}
+										>
+											編集
+										</Link>
+									</Button>
+								</TableCell>
+								<TableCell align="center">
+									<Button
+										id={row.id}
+										//type="submit"
+										onClick={deleteShopSubmit}
+										variant="outlined"
+									>
+										削除
+									</Button>
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</Box>
 	);
 };
 

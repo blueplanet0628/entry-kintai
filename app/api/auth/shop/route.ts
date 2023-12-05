@@ -1,36 +1,37 @@
 import { NextResponse } from "next/server";
 
-// import prismadb from "@/lib/prisma/prismadb";
+import prismadb from "@/lib/prisma/prismadb";
 
-// sample
-export const GET = async (req: Request, res: NextResponse) => {
+export const GET = async (res: NextResponse) => {
 	try {
-		console.log("test");
-
-		/*
-		const { name, email, password } = await req.json();
-
-		const existingUser = await prismadb.user.findUnique({ where: { email } });
-
-		if (existingUser)
-			return NextResponse.json({ message: "Email taken" }, { status: 422 });
-
-		const hashedPassword = await bcrypt.hash(password, 12);
-
-		const user = await prismadb.user.create({
-			data: {
-				email,
-				name,
-				password: hashedPassword,
-				image: "",
-				emailVerified: new Date(),
+		// NOTE: 現段階において,Companyテーブルのレコードは1つのみなので,固定値とする.
+		// TODO: 将来的にユーザーが所属する会社を条件にcompanyIdを取得する.
+		const shop = await prismadb.shop.findMany({
+			where: { companyId: 1 },
+			select: {
+				id: true,
+				code: true,
+				name: true,
+				phoneNumber1: true,
+				isEnabled: true,
 			},
 		});
-        */
-		const user = "test";
 
-		// ここでURLかえす？
-		return NextResponse.json({ user }, { status: 201 });
+		return NextResponse.json({ shop: shop }, { status: 201 });
+	} catch (err: any) {
+		return NextResponse.json({ message: err.message }, { status: 500 });
+	}
+};
+
+export const DELETE = async (req: Request, res: NextResponse) => {
+	try {
+		const { id } = await req.json();
+
+		const shop = await prismadb.shop.delete({
+			where: { id: id },
+		});
+
+		return NextResponse.json({ shop: shop }, { status: 204 });
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}
