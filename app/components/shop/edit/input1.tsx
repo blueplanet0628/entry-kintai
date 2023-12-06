@@ -33,7 +33,7 @@ function Input1(props: any) {
 	const id = searchParams.get("id");
 
 	async function fetchData() {
-		const response = await fetch(`/api/auth/shop/edit/${id}`, {
+		const response = await fetch(`/api/shop/edit/${id}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

@@ -24,7 +24,7 @@ const Shop = () => {
 	// NOTE: Shopテーブルデータ取得処理(Shopテーブルからデータを取得し,画面に件数分データを表示させる為の準備処理)
 	useEffect(() => {
 		const fetchShopRows = async () => {
-			const response = await fetch("/api/auth/shop", {
+			const response = await fetch("/api/shop", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -42,7 +42,7 @@ const Shop = () => {
 		e.preventDefault();
 
 		const id = e.target.id;
-		const response = await fetch("/api/auth/shop", {
+		const response = await fetch("/api/shop", {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
@@ -78,9 +78,11 @@ const Shop = () => {
 				</Typography>
 			</Box>
 			<Box my={2} flexDirection="row" justifyContent="flex-end" display="flex">
-				<Button variant="outlined" sx={{ align: "right" }}>
-					<Link href={{ pathname: "/shop/register" }}>新規登録</Link>
-				</Button>
+				<Link href={{ pathname: "/shop/register" }}>
+					<Button variant="outlined" sx={{ align: "right" }}>
+						新規登録
+					</Button>
+				</Link>
 			</Box>
 			<TableContainer component={Paper} sx={{ mb: "100px" }}>
 				<Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -111,23 +113,24 @@ const Shop = () => {
 									{row.isEnabled === true ? "有効" : "無効"}
 								</TableCell>
 								<TableCell align="center">
-									<Button variant="outlined">
-										<Link
-											href={{ pathname: "/shop/edit", query: { id: row.id } }}
-										>
-											編集
-										</Link>
-									</Button>
+									<Link
+										href={{ pathname: "/shop/edit", query: { id: row.id } }}
+									>
+										<Button variant="outlined">編集</Button>
+									</Link>
 								</TableCell>
 								<TableCell align="center">
-									<Button
-										id={row.id}
-										//type="submit"
-										onClick={deleteShopSubmit}
-										variant="outlined"
-									>
-										削除
-									</Button>
+									{row.isEnabled !== true ? (
+										<Button
+											id={row.id}
+											onClick={deleteShopSubmit}
+											variant="outlined"
+										>
+											削除
+										</Button>
+									) : (
+										""
+									)}
 								</TableCell>
 							</TableRow>
 						))}

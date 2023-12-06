@@ -12,7 +12,7 @@ function Confirm(props: any) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const response = await fetch("/api/auth/shop/register", {
+		const response = await fetch("/api/shop/register", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

@@ -9,6 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input1Form {
@@ -26,6 +27,26 @@ export interface Input1Form {
 }
 
 function Input1(props: any) {
+	useEffect(() => {
+		if (props.formValue.Input1Form) {
+			const shop = props.formValue.Input1Form;
+
+			setValue("type", shop.type, { shouldDirty: true });
+			setValue("name", shop.name, { shouldDirty: true });
+			setValue("phoneNumber1", shop.phoneNumber1, { shouldDirty: true });
+			setValue("phoneNumber2", shop.phoneNumber2, { shouldDirty: true });
+			setValue("addressPostcode", shop.addressPostcode, { shouldDirty: true });
+			setValue("addressPrefecture", shop.addressPrefecture, {
+				shouldDirty: true,
+			});
+			setValue("addressCity", shop.addressCity, { shouldDirty: true });
+			setValue("addressBlock", shop.addressBlock, { shouldDirty: true });
+			setValue("addressBuilding", shop.addressBuilding, { shouldDirty: true });
+			setValue("phoneNumber3", shop.phoneNumber3, { shouldDirty: true });
+			setValue("phoneNumber4", shop.phoneNumber4, { shouldDirty: true });
+		}
+	}, []);
+
 	const { control, handleSubmit, setValue } = useForm<Input1Form>({
 		defaultValues: {
 			type: 0,
@@ -251,7 +272,7 @@ function Input1(props: any) {
 					)}
 				/>
 				<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-					<Button variant="outlined" disabled sx={{ mr: 1 }}>
+					<Button variant="outlined" onClick={props.handleBack} sx={{ mr: 1 }}>
 						戻る
 					</Button>
 					<Button onClick={handleSubmit(onSubmit)} variant="outlined">

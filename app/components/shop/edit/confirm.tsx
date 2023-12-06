@@ -16,7 +16,7 @@ function Confirm(props: any) {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		const response = await fetch(`/api/auth/shop/edit/${id}`, {
+		const response = await fetch(`/api/shop/edit/${id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
