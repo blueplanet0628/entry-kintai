@@ -12,9 +12,9 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import Confirm from "@/app/components/shop/register/confirm";
-import Input1 from "@/app/components/shop/register/input1";
-import Input2 from "@/app/components/shop/register/input2";
+import Confirm from "@/app/components/shop/edit/confirm";
+import Input1 from "@/app/components/shop/edit/input1";
+import Input2 from "@/app/components/shop/edit/input2";
 
 const steps = ["基本情報", "シフト設定", "確認"];
 
@@ -29,7 +29,9 @@ export default function Home() {
 	};
 
 	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		activeStep === 0
+			? router.push("/shop")
+			: setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
 	const handleReset = () => {
@@ -42,6 +44,7 @@ export default function Home() {
 			case 0:
 				return (
 					<Input1
+						handleBack={handleBack}
 						handleNext={handleNext}
 						formValue={formValue}
 						setFormValue={setFormValue}
@@ -78,7 +81,9 @@ export default function Home() {
 				</Stepper>
 				{activeStep === steps.length ? (
 					<div>
-						<Typography sx={{ mt: 2, mb: 1 }}>登録が完了しました。</Typography>
+						<Typography sx={{ mt: 2, mb: 1 }}>
+							店舗情報を更新しました。
+						</Typography>
 						<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
 							<Button onClick={handleReset}>戻る</Button>
 						</Box>
@@ -86,7 +91,7 @@ export default function Home() {
 				) : (
 					<div>
 						<Typography sx={{ mt: 3, mb: 5, fontSize: "h6.fontSize" }}>
-							店舗登録
+							店舗情報編集
 						</Typography>
 						{changeFormConponent(activeStep)}
 					</div>
