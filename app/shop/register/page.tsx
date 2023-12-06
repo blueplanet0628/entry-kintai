@@ -29,7 +29,9 @@ export default function Home() {
 	};
 
 	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		activeStep === 0
+			? router.push("/shop")
+			: setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
 	const handleReset = () => {
@@ -42,6 +44,7 @@ export default function Home() {
 			case 0:
 				return (
 					<Input1
+						handleBack={handleBack}
 						handleNext={handleNext}
 						formValue={formValue}
 						setFormValue={setFormValue}

@@ -6,6 +6,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input2Form {
@@ -15,6 +16,16 @@ export interface Input2Form {
 }
 
 function Input2(props: any) {
+	useEffect(() => {
+		if (props.formValue.Input2Form) {
+			const shop = props.formValue.Input2Form;
+
+			setValue("shiftPeriod", shop.shiftPeriod, { shouldDirty: true });
+			setValue("shiftDeadline", shop.shiftDeadline, { shouldDirty: true });
+			setValue("isEnabled", shop.isEnabled ? 1 : 0, { shouldDirty: true });
+		}
+	}, []);
+
 	const { control, handleSubmit, setValue } = useForm<Input2Form>({
 		defaultValues: {
 			shiftPeriod: 0,

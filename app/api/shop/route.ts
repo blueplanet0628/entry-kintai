@@ -27,6 +27,8 @@ export const DELETE = async (req: Request, res: NextResponse) => {
 	try {
 		const { id } = await req.json();
 
+		// TODO: 店舗 - ユーザー中間テーブルの対象の店舗IDのレコードを全件削除する.
+
 		const shop = await prismadb.shop.delete({
 			where: { id: id },
 		});
