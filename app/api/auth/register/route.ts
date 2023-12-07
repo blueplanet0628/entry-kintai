@@ -8,6 +8,20 @@ export const POST = async (req: Request, res: NextResponse) => {
 	try {
 		const { name, email, password } = await req.json();
 
+		// NOTE: 会社登録フォームが存在しない為,Companyテーブルにレコードが存在しない場合,ID=1のデータを持つレコードを作成する.
+		//		 また,ID=1のレコードが存在する場合,Insert処理をスキップする.
+		const existingCompany = await prismadb.company.findUnique({
+			where: { id: 1 },
+		});
+
+		const comapny = !existingCompany
+			? await prismadb.company.create({
+					data: {
+						name: "Entry",
+					},
+			  })
+			: existingCompany;
+
 		const existingUser = await prismadb.user.findUnique({ where: { email } });
 
 		if (existingUser)
@@ -17,11 +31,12 @@ export const POST = async (req: Request, res: NextResponse) => {
 
 		const user = await prismadb.user.create({
 			data: {
-				email,
+				companyId: 1,
 				name,
+				email,
 				password: hashedPassword,
-				image: "",
-				emailVerified: new Date(),
+				role: 1, // NOTE: 本登録処理は必然的に管理者ユーザーとなる為,管理者用ロールとする.
+				isEnabled: true, // NOTE: 本登録処理は必然的に管理者ユーザーとなる為,有効とする.
 			},
 		});
 

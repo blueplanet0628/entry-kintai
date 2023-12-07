@@ -36,9 +36,11 @@ export const options: NextAuthOptions = {
 					console.log("ok");
 					return {
 						id: user.id,
-						name: user.email,
+						companyId: user.companyId,
+						name: user.name,
 						email: user.email,
-						role: "admin",
+						role: user.role,
+						isEnabled: user.isEnabled,
 					};
 				} else {
 					console.log("ng");
@@ -52,8 +54,11 @@ export const options: NextAuthOptions = {
 			if (user) {
 				const u = user as any;
 				token.id = u.id;
-				token.user = user;
+				token.companyId = u.companyId;
+				token.name = u.name;
+				token.email = u.email;
 				token.role = u.role;
+				token.isEnabled = u.isEnabled;
 			}
 			if (account) {
 				token.accessToken = account.access_token;
@@ -66,8 +71,11 @@ export const options: NextAuthOptions = {
 				...session,
 				user: {
 					id: token.id,
-					...session.user,
+					companyId: token.companyId,
+					name: token.name,
+					email: token.email,
 					role: token.role,
+					isEnabled: token.isEnabled,
 				},
 			};
 		},
