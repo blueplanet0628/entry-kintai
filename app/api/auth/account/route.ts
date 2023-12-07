@@ -1,7 +1,7 @@
-import bcrypt from "bcrypt";
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
 import { options } from "@/lib/auth/options";
+import bcrypt from "bcrypt";
+import { getServerSession } from "next-auth/next";
+import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prisma/prismadb";
 
@@ -40,7 +40,6 @@ export const POST = async (req: Request, res: NextResponse) => {
 			data: {
 				email,
 				password: hashedPassword,
-				emailVerified: new Date(),
 			},
 			where: { id: id },
 		});
