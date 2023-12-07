@@ -9,7 +9,9 @@
 5. Prisma初期化
 `npx prisma generate`
 6. マイグレーション
-`npx prisma migrate dev --name init`
+`npx prisma migrate dev`
+7. シード投入
+`npm run seed`
 
 
 ## 起動
