@@ -6,6 +6,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const options: NextAuthOptions = {
 	debug: true,
 	session: { strategy: "jwt" },
+	pages: {
+		signIn: "/login",
+		error: "/login",
+	},
 	providers: [
 		CredentialsProvider({
 			name: "Email",
@@ -19,6 +23,7 @@ export const options: NextAuthOptions = {
 			},
 			// メルアド認証処理
 			async authorize(credentials) {
+				console.log("authorize", credentials);
 				const user = await prismadb.user.findUnique({
 					where: { email: credentials?.email },
 				});
