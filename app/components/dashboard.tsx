@@ -87,8 +87,13 @@ const Drawer = styled(MuiDrawer, {
 	},
 }));
 
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+	typography: {
+		h1: {
+			fontSize: 20,
+		},
+	},
+});
 
 export default function Dashboard({ children }: { children: React.ReactNode }) {
 	const [open, setOpen] = React.useState(true);
