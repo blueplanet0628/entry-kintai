@@ -1,10 +1,73 @@
+"use client";
+
+import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import React from "react";
 
+const style = {
+	position: "absolute" as "absolute",
+	top: "50%",
+	left: "50%",
+	transform: "translate(-50%, -50%)",
+	width: 400,
+	bgcolor: "background.paper",
+	border: "2px solid #000",
+	boxShadow: 24,
+	p: 4,
+};
+
 export default function Stamping() {
+	const [open, setOpen] = React.useState(false);
+
+	const handleOpen = () => setOpen(true);
+
+	const handleClose = () => {
+		const confirmed = confirm("打刻モードを終了しますか？");
+		if (confirmed) {
+			setOpen(false);
+		}
+	};
+
 	return (
-		<div>
-			<h1>打刻</h1>
-			<p>This is a simple page created with Next.js.</p>
-		</div>
+		<>
+			<Typography variant="h1">打刻</Typography>
+
+			<Button onClick={handleOpen} variant="contained">
+				打刻モードを開始
+			</Button>
+			<Modal
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="modal-modal-title"
+				aria-describedby="modal-modal-description"
+			>
+				<Box sx={style}>
+					<Typography id="modal-modal-title" variant="h6" component="h2">
+						打刻モード
+					</Typography>
+					<Typography id="modal-modal-description" sx={{ mt: 2 }}>
+						カードリーダーにICカードをかざしてください。
+					</Typography>
+					<Box>
+						<TextField
+							sx={{ width: "100%" }}
+							label="カードID"
+							id="standard-size-small"
+							size="medium"
+							variant="standard"
+						/>
+						<TextField
+							sx={{ width: "100%", mt: 1 }}
+							label="従業員名"
+							id="standard-size-small"
+							size="medium"
+							variant="standard"
+						/>
+					</Box>
+					<Button variant="contained" color="secondary">
+						閉じる
+					</Button>
+				</Box>
+			</Modal>
+		</>
 	);
 }

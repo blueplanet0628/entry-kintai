@@ -20,7 +20,7 @@ export const mainListItems = (
 			</ListItemIcon>
 			<ListItemText primary="シフト管理" />
 		</ListItemButton> */}
-		<Link href="/timecard">
+		<Link href="/admin/timecard">
 			<ListItemButton>
 				<ListItemIcon>
 					<AssignmentIcon />
@@ -28,7 +28,7 @@ export const mainListItems = (
 				<ListItemText primary="タイムカード" />
 			</ListItemButton>
 		</Link>
-		<Link href="/stamping">
+		<Link href="/admin/stamping">
 			<ListItemButton>
 				<ListItemIcon>
 					<AlarmIcon />
@@ -36,7 +36,7 @@ export const mainListItems = (
 				<ListItemText primary="打刻" />
 			</ListItemButton>
 		</Link>
-		<Link href="/staff">
+		<Link href="/admin/staff">
 			<ListItemButton>
 				<ListItemIcon>
 					<PeopleIcon />
@@ -44,7 +44,7 @@ export const mainListItems = (
 				<ListItemText primary="スタッフ設定" />
 			</ListItemButton>
 		</Link>
-		<Link href="/shop">
+		<Link href="/admin/shop">
 			<ListItemButton>
 				<ListItemIcon>
 					<StoreIcon />
@@ -68,7 +68,7 @@ export const secondaryListItems = (
 		{/* <ListSubheader component="div" inset>
 			Saved reports
 		</ListSubheader> */}
-		<ListItemButton href="/account">
+		<ListItemButton href="/admin/account">
 			<ListItemIcon>
 				<SettingsIcon />
 			</ListItemIcon>

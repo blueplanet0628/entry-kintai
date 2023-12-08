@@ -1,10 +1,9 @@
-import React from "react";
-
-export default function Staff() {
+const StaffPage = () => {
 	return (
 		<div>
-			<h1>スタッフ設定</h1>
-			<p>This is a simple page created with Next.js.</p>
+			<h1>Staff Page</h1>
 		</div>
 	);
-}
+};
+
+export default StaffPage;
