@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  SHOP_ADMIN
+  USER
+}
+
 model Company {
   id         Int        @id @default(autoincrement())
   name       String     @db.VarChar(255)
@@ -55,7 +61,7 @@ model User {
   name           String?    @db.VarChar(255)
   email          String     @unique
   password       String     @db.VarChar(255)
-  role           Int        @db.SmallInt()
+  role           Role       @default(USER)
   isEnabled      Boolean    @db.TinyInt() @map("is_enabled")
   createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
   updatedAt      DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(0)
