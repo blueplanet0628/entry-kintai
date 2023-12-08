@@ -35,24 +35,23 @@ export const options: NextAuthOptions = {
 				if (isCorrectPassword) {
 					console.log("ok");
 					return {
-						id: user.id,
+						id: user.id.toString(),
 						companyId: user.companyId,
 						name: user.name,
 						email: user.email,
 						role: user.role,
 						isEnabled: user.isEnabled,
 					};
-				} else {
-					console.log("ng");
-					return null;
 				}
+				console.log("ng");
+				return null;
 			},
 		}),
 	],
 	callbacks: {
 		jwt: async ({ token, user, account }) => {
 			if (user) {
-				const u = user as any;
+				const u = user;
 				token.id = u.id;
 				token.companyId = u.companyId;
 				token.name = u.name;

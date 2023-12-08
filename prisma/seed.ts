@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../lib/prisma/prismadb";
 
@@ -49,7 +50,7 @@ async function main() {
 			companyId: 1,
 			name: "ENTRY管理者",
 			email: "admin@entry-kintai.com",
-			role: 1,
+			role: Role.ADMIN,
 			password,
 			isEnabled: true,
 		},
@@ -65,7 +66,7 @@ async function main() {
 			companyId: 1,
 			name: "ENTRY店舗管理者",
 			email: "shopadmin@entry-kintai.com",
-			role: 2,
+			role: Role.SHOP_ADMIN,
 			password,
 			isEnabled: true,
 		},
@@ -81,7 +82,7 @@ async function main() {
 			companyId: 1,
 			name: "ENTRY店舗管理者",
 			email: "staff@entry-kintai.com",
-			role: 3,
+			role: Role.USER,
 			password,
 			isEnabled: true,
 		},
