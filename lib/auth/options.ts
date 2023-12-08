@@ -23,7 +23,6 @@ export const options: NextAuthOptions = {
 			},
 			// メルアド認証処理
 			async authorize(credentials) {
-				console.log("authorize", credentials);
 				const user = await prismadb.user.findUnique({
 					where: { email: credentials?.email },
 				});
