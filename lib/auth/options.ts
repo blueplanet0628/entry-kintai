@@ -6,6 +6,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const options: NextAuthOptions = {
 	debug: true,
 	session: { strategy: "jwt" },
+	pages: {
+		signIn: "/login",
+		error: "/login",
+	},
 	providers: [
 		CredentialsProvider({
 			name: "Email",
