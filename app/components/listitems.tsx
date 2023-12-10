@@ -9,6 +9,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import * as React from "react";
 
+import { CardReader } from "@/lib/webusb/card-reader";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
@@ -58,7 +59,10 @@ export const mainListItems = (
 const onSignout = () => {
 	const out = async () => {
 		const confirmed = confirm("ログアウトしますか？");
-		if (confirmed) signOut();
+		if (confirmed) {
+			signOut();
+			await CardReader.releaseDevice();
+		}
 	};
 	out();
 };
