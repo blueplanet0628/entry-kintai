@@ -61,6 +61,7 @@ model User {
   name           String?    @db.VarChar(255)
   email          String     @unique
   password       String     @db.VarChar(255)
+  cardid         String?    @db.VarChar(255) @unique
   role           Role       @default(USER)
   isEnabled      Boolean    @db.TinyInt() @map("is_enabled")
   createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp(0)
@@ -137,7 +138,7 @@ model Shop_user {
 }
 
 model Attendance {
-  id         Int        @id 
+  id         Int        @id @default(autoincrement())
   shopId     Int        @map("shop_id")
   userId     Int        @map("user_id")
   clockIn1   DateTime?  @map("clock_in1") @db.DateTime(3)

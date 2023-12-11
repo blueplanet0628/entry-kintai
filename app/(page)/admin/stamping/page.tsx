@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import StampingModal from "@/app/components/stampingmodal";
+import { Button, Typography } from "@mui/material";
 import React from "react";
 
 const style = {
@@ -20,12 +21,7 @@ export default function Stamping() {
 
 	const handleOpen = () => setOpen(true);
 
-	const handleClose = () => {
-		const confirmed = confirm("打刻モードを終了しますか？");
-		if (confirmed) {
-			setOpen(false);
-		}
-	};
+	const handleUpdated = () => {};
 
 	return (
 		<>
@@ -34,40 +30,13 @@ export default function Stamping() {
 			<Button onClick={handleOpen} variant="contained">
 				打刻モードを開始
 			</Button>
-			<Modal
+			<StampingModal
 				open={open}
-				onClose={handleClose}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
-			>
-				<Box sx={style}>
-					<Typography id="modal-modal-title" variant="h6" component="h2">
-						打刻モード
-					</Typography>
-					<Typography id="modal-modal-description" sx={{ mt: 2 }}>
-						カードリーダーにICカードをかざしてください。
-					</Typography>
-					<Box>
-						<TextField
-							sx={{ width: "100%" }}
-							label="カードID"
-							id="standard-size-small"
-							size="medium"
-							variant="standard"
-						/>
-						<TextField
-							sx={{ width: "100%", mt: 1 }}
-							label="従業員名"
-							id="standard-size-small"
-							size="medium"
-							variant="standard"
-						/>
-					</Box>
-					<Button variant="contained" color="secondary">
-						閉じる
-					</Button>
-				</Box>
-			</Modal>
+				onClose={() => {
+					setOpen(false);
+				}}
+				onUpdated={handleUpdated}
+			/>
 		</>
 	);
 }
