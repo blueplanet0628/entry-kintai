@@ -90,7 +90,7 @@ async function main() {
 	});
 
 	// 店舗 - ユーザー中間テーブル
-	await prisma.shop_user.upsert({
+	await prisma.shopUser.upsert({
 		where: {
 			shopId_userId: {
 				shopId: 1,
@@ -103,7 +103,7 @@ async function main() {
 		},
 		update: {},
 	});
-	await prisma.shop_user.upsert({
+	await prisma.shopUser.upsert({
 		where: {
 			shopId_userId: {
 				shopId: 1,

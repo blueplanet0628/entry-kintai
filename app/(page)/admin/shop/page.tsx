@@ -78,7 +78,7 @@ const Shop = () => {
 				</Typography>
 			</Box>
 			<Box my={2} flexDirection="row" justifyContent="flex-end" display="flex">
-				<Link href={{ pathname: "/shop/register" }}>
+				<Link href={{ pathname: "/admin/shop/register" }}>
 					<Button variant="outlined" sx={{ align: "right" }}>
 						新規登録
 					</Button>
@@ -114,7 +114,10 @@ const Shop = () => {
 								</TableCell>
 								<TableCell align="center">
 									<Link
-										href={{ pathname: "/shop/edit", query: { id: row.id } }}
+										href={{
+											pathname: "/admin/shop/edit",
+											query: { id: row.id },
+										}}
 									>
 										<Button variant="outlined">編集</Button>
 									</Link>

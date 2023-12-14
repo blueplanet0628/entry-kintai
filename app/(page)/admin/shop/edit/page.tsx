@@ -30,13 +30,13 @@ export default function Home() {
 
 	const handleBack = () => {
 		activeStep === 0
-			? router.push("/shop")
+			? router.push("/admin/shop")
 			: setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
 	const handleReset = () => {
 		//setActiveStep(0);
-		router.push("/shop");
+		router.push("/admin/shop");
 	};
 
 	const changeFormConponent = (activeStep: number) => {

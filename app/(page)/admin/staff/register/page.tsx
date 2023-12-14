@@ -12,11 +12,13 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import Confirm from "@/app/components/shop/register/confirm";
-import Input1 from "@/app/components/shop/register/input1";
-import Input2 from "@/app/components/shop/register/input2";
+import Confirm from "@/app/components/staff/register/confirm";
+import Input1 from "@/app/components/staff/register/input1";
+import Input2 from "@/app/components/staff/register/input2";
+import Input3 from "@/app/components/staff/register/input3";
+import Input4 from "@/app/components/staff/register/input4";
 
-const steps = ["基本情報", "シフト設定", "確認"];
+const steps = ["基本情報", "基本情報2", "基本給与設定", "振込先情報", "確認"];
 
 export default function Home() {
 	const router = useRouter();
@@ -30,13 +32,12 @@ export default function Home() {
 
 	const handleBack = () => {
 		activeStep === 0
-			? router.push("/admin/shop")
+			? router.push("/admin/staff")
 			: setActiveStep((prevActiveStep) => prevActiveStep - 1);
 	};
 
 	const handleReset = () => {
-		//setActiveStep(0);
-		router.push("/admin/shop");
+		router.push("/admin/staff");
 	};
 
 	const changeFormConponent = (activeStep: number) => {
@@ -60,6 +61,24 @@ export default function Home() {
 					/>
 				);
 			case 2:
+				return (
+					<Input3
+						handleBack={handleBack}
+						handleNext={handleNext}
+						formValue={formValue}
+						setFormValue={setFormValue}
+					/>
+				);
+			case 3:
+				return (
+					<Input4
+						handleBack={handleBack}
+						handleNext={handleNext}
+						formValue={formValue}
+						setFormValue={setFormValue}
+					/>
+				);
+			case 4:
 				return (
 					<Confirm
 						handleBack={handleBack}
@@ -89,7 +108,7 @@ export default function Home() {
 				) : (
 					<div>
 						<Typography sx={{ mt: 3, mb: 5, fontSize: "h6.fontSize" }}>
-							店舗登録
+							スタッフ登録
 						</Typography>
 						{changeFormConponent(activeStep)}
 					</div>
