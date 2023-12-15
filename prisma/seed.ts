@@ -80,7 +80,7 @@ async function main() {
 		create: {
 			id: 3,
 			companyId: 1,
-			name: "ENTRY店舗管理者",
+			name: "ENTRY一般ユーザー",
 			email: "staff@entry-kintai.com",
 			role: Role.USER,
 			password,

@@ -53,7 +53,7 @@ const Shop = () => {
 		});
 
 		if (response.ok) {
-			router.push("/shop");
+			router.push("/admin/shop");
 		} else {
 			console.log("error");
 		}
