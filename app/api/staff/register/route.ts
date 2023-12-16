@@ -86,7 +86,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 		const enumGender = ConversionToEnumGender(gender);
 		// NOTE: ユーザーコードは,"B+各ユーザーのレコード数(0埋め後桁数5)"とする.
 		const codeCounts =
-			(await prismadb.shop.count({
+			(await prismadb.user.count({
 				where: { companyId: companyId },
 			})) + 1;
 		const employeeCode = `B${codeCounts.toString().padStart(5, "0")}`;

@@ -33,7 +33,7 @@ export const DELETE = async (req: Request, res: NextResponse) => {
 			where: { id: id },
 		});
 
-		return NextResponse.json({ shop: shop }, { status: 204 });
+		return new Response(null, { status: 204 });
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}
