@@ -6,6 +6,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import { FareSetting, Wage } from "@prisma/client";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -27,43 +29,94 @@ export interface Input3Form {
 }
 
 function Input3(props: any) {
-	useEffect(() => {
-		if (props.formValue.Input3Form) {
-			const staff = props.formValue.Input3Form;
+	const searchParams = useSearchParams();
+	const id = searchParams.get("id");
 
-			setValue("wage", staff.wage, { shouldDirty: true });
-			setValue("timeframe1StartTime", staff.timeframe1StartTime, {
-				shouldDirty: true,
-			});
-			setValue("timeframe1EndTime", staff.timeframe1EndTime, {
-				shouldDirty: true,
-			});
-			setValue("timeframe1Salary", staff.timeframe1Salary, {
-				shouldDirty: true,
-			});
-			setValue("timeframe2StartTime", staff.timeframe2StartTime, {
-				shouldDirty: true,
-			});
-			setValue("timeframe2EndTime", staff.timeframe2EndTime, {
-				shouldDirty: true,
-			});
-			setValue("timeframe2Salary", staff.timeframe2Salary, {
-				shouldDirty: true,
-			});
-			setValue("timeframe3StartTime", staff.timeframe3StartTime, {
-				shouldDirty: true,
-			});
-			setValue("timeframe3EndTime", staff.timeframe3EndTime, {
-				shouldDirty: true,
-			});
-			setValue("timeframe3Salary", staff.timeframe3Salary, {
-				shouldDirty: true,
-			});
-			setValue("fareSetting", staff.fareSetting, { shouldDirty: true });
-			setValue("dailyRate", staff.dailyRate, { shouldDirty: true });
-			setValue("fixedMonth", staff.fixedMonth, { shouldDirty: true });
-			setValue("nonPayment", staff.nonPayment, { shouldDirty: true });
+	// NOTE: ユーザー情報取得
+	async function fetchUser() {
+		const response = await fetch(`/api/staff/edit/${id}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		if (response.ok) {
+			const data = await response.json();
+			return data;
 		}
+	}
+
+	useEffect(() => {
+		fetchUser().then((data) => {
+			const staff = !props.formValue.Input3Form
+				? data.user
+				: props.formValue.Input3Form;
+
+			const staffDetail = !props.formValue.Input3Form
+				? data.user.userDetails[0]
+				: props.formValue.Input3Form;
+
+			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
+			const wage = !props.formValue.Input3Form
+				? ConversionToNumberWage(staffDetail.wage)
+				: staffDetail.wage;
+			const timeframe1StartTime = !props.formValue.Input3Form
+				? sliceTime(staffDetail.timeframe1StartTime)
+				: staffDetail.timeframe1StartTime;
+			const timeframe1EndTime = !props.formValue.Input3Form
+				? sliceTime(staffDetail.timeframe1EndTime)
+				: staffDetail.timeframe1EndTime;
+			const timeframe2StartTime = !props.formValue.Input3Form
+				? sliceTime(staffDetail.timeframe2StartTime)
+				: staffDetail.timeframe2StartTime;
+			const timeframe2EndTime = !props.formValue.Input3Form
+				? sliceTime(staffDetail.timeframe2EndTime)
+				: staffDetail.timeframe2EndTime;
+			const timeframe3StartTime = !props.formValue.Input3Form
+				? sliceTime(staffDetail.timeframe3StartTime)
+				: staffDetail.timeframe3StartTime;
+			const timeframe3EndTime = !props.formValue.Input3Form
+				? sliceTime(staffDetail.timeframe3EndTime)
+				: staffDetail.timeframe3EndTime;
+			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
+			const fareSetting = !props.formValue.Input3Form
+				? ConversionToNumberFareSetting(staffDetail.fareSetting)
+				: staffDetail.fareSetting;
+
+			setValue("wage", wage, { shouldDirty: true });
+			setValue("timeframe1StartTime", timeframe1StartTime, {
+				shouldDirty: true,
+			});
+			setValue("timeframe1EndTime", timeframe1EndTime, {
+				shouldDirty: true,
+			});
+			setValue("timeframe1Salary", staffDetail.timeframe1Salary, {
+				shouldDirty: true,
+			});
+			setValue("timeframe2StartTime", timeframe2StartTime, {
+				shouldDirty: true,
+			});
+			setValue("timeframe2EndTime", timeframe2EndTime, {
+				shouldDirty: true,
+			});
+			setValue("timeframe2Salary", staffDetail.timeframe2Salary, {
+				shouldDirty: true,
+			});
+			setValue("timeframe3StartTime", timeframe3StartTime, {
+				shouldDirty: true,
+			});
+			setValue("timeframe3EndTime", timeframe3EndTime, {
+				shouldDirty: true,
+			});
+			setValue("timeframe3Salary", staffDetail.timeframe3Salary, {
+				shouldDirty: true,
+			});
+			setValue("fareSetting", fareSetting, { shouldDirty: true });
+			setValue("dailyRate", staffDetail.dailyRate, { shouldDirty: true });
+			setValue("fixedMonth", staffDetail.fixedMonth, { shouldDirty: true });
+			setValue("nonPayment", staffDetail.nonPayment, { shouldDirty: true });
+		});
 	}, [props.formValue.Input3Form]);
 
 	const { control, handleSubmit, setValue } = useForm<Input3Form>({
@@ -84,6 +137,39 @@ function Input3(props: any) {
 			nonPayment: 0,
 		},
 	});
+
+	const ConversionToNumberWage = (wage: string) => {
+		if (wage === Wage.HOURLY) {
+			return 1;
+		}
+		if (wage === Wage.DAILY) {
+			return 2;
+		}
+		if (wage === Wage.MONTHLY) {
+			return 3;
+		}
+		return 0;
+	};
+
+	const ConversionToNumberFareSetting = (fareSetting: string) => {
+		if (fareSetting === FareSetting.DAILY) {
+			return 1;
+		}
+		if (fareSetting === FareSetting.MONTHLY) {
+			return 2;
+		}
+		if (fareSetting === FareSetting.NON) {
+			return 3;
+		}
+		return 0;
+	};
+
+	const sliceTime = (time: string) => {
+		const startingPosition = time.indexOf("T") + 1;
+		const sliceTime = time.substr(startingPosition, 5);
+
+		return sliceTime;
+	};
 
 	const onSubmit = (data: Input3Form) => {
 		props.handleNext();

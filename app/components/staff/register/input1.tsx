@@ -13,7 +13,6 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useEffect, useState } from "react";
-import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input1Form {
@@ -42,7 +41,7 @@ function Input1(props: any) {
 		// NOTE: 店舗情報の取得
 		const fetchShop = async () => {
 			// TODO: 編集画面でも同様の処理を実施するので,pathの場所は変更する可能性有り.
-			const response = await fetch("/api/staff/register/shop/", {
+			const response = await fetch("/api/staff/shop/", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -91,14 +90,14 @@ function Input1(props: any) {
 		}
 	}, [props.formValue.Input1Form]);
 
-	const [inputEmailValue, setInputEmailValue] = React.useState<string>("");
-	const [isExistingEmail, setIsExistingEmail] = React.useState(false);
+	const [inputEmailValue, setInputEmailValue] = useState<string>("");
+	const [isExistingEmail, setIsExistingEmail] = useState(false);
 
 	const [shop, setShop] = useState([]);
 	const [shopNameList, setShopNameList] = useState([]);
-	const [shopId, setShopId] = React.useState<number[]>([]);
-	const [shopCode, setShopCode] = React.useState<string[]>([]);
-	const [shopName, setShopName] = React.useState<string[]>([]);
+	const [shopId, setShopId] = useState<number[]>([]);
+	const [shopCode, setShopCode] = useState<string[]>([]);
+	const [shopName, setShopName] = useState<string[]>([]);
 
 	const { control, handleSubmit, setValue } = useForm<Input1Form>({
 		defaultValues: {

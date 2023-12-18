@@ -17,7 +17,7 @@ export const GET = async (
 		}))
 			? true
 			: false;
-		console.log(user);
+
 		return NextResponse.json({ user: user }, { status: 201 });
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
