@@ -138,11 +138,14 @@ function Input1(props: any) {
 	const handleEmailCheck = async (e: any) => {
 		const email = e.target.value ? e.target.value : undefined;
 
-		const response = await fetch(`/api/staff/register/emailCheck/${email}`, {
-			method: "GET",
+		const response = await fetch("/api/staff/register/emailCheck", {
+			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
+			body: JSON.stringify({
+				email: email,
+			}),
 		});
 
 		const responseData = await response.json();
