@@ -20,11 +20,10 @@ import Typography from "@mui/material/Typography";
 import { EmploymentStatus } from "@prisma/client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import * as React from "react";
 
 const Staff = () => {
 	// NOTE: セレクトボックス挙動制御の為,string型にする.
-	const [shopId, setShopId] = React.useState("");
+	const [shopId, setShopId] = useState("");
 	const [shopRows, setShopRows] = useState([]);
 	const [userRows, setUserRows] = useState([]);
 

@@ -2,12 +2,9 @@ import prismadb from "@/lib/prisma/prismadb";
 
 import { NextResponse } from "next/server";
 
-//
 export const GET = async (params, searchParams, res: NextResponse) => {
 	try {
 		const paramId = Number(searchParams.params.id);
-		console.log(paramId);
-		console.log(typeof paramId);
 
 		const shop = await prismadb.shop.findUnique({
 			where: { id: paramId },
@@ -37,7 +34,6 @@ export const GET = async (params, searchParams, res: NextResponse) => {
 	}
 };
 
-//
 export const PUT = async (req: Request, res: NextResponse) => {
 	try {
 		const {

@@ -6,13 +6,26 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { Gender, Role } from "@prisma/client";
+import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input2Form {
-	shiftPeriod: number;
-	shiftDeadline: number;
+	birthday: Dayjs | null;
+	gender: number;
+	employeeCode: string;
+	startDate: Dayjs | null;
+	lastDate: Dayjs | null;
+	retirementReason: string;
+	role: number;
 	isEnabled: number;
 }
 
@@ -20,8 +33,9 @@ function Input2(props: any) {
 	const searchParams = useSearchParams();
 	const id = searchParams.get("id");
 
-	async function fetchData() {
-		const response = await fetch(`/api/shop/edit/${id}`, {
+	// NOTE: ユーザー情報取得
+	async function fetchUser() {
+		const response = await fetch(`/api/staff/edit/${id}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -31,32 +45,92 @@ function Input2(props: any) {
 		if (response.ok) {
 			const data = await response.json();
 			return data;
-		} else {
-			console.log("error");
 		}
 	}
 
 	useEffect(() => {
-		fetchData().then((data) => {
-			const shop = !props.formValue.Input2Form
-				? data.shop
+		fetchUser().then((data) => {
+			const staff = !props.formValue.Input2Form
+				? data.user
 				: props.formValue.Input2Form;
 
-			setValue("shiftPeriod", shop.shiftPeriod, { shouldDirty: true });
-			setValue("shiftDeadline", shop.shiftDeadline, { shouldDirty: true });
-			setValue("isEnabled", shop.isEnabled ? 1 : 0, { shouldDirty: true });
+			const staffDetail = !props.formValue.Input2Form
+				? data.user.userDetails[0]
+				: props.formValue.Input2Form;
+
+			const birthday = dayjs(staffDetail.birthday);
+			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
+			const gender = !props.formValue.Input2Form
+				? ConversionToNumberGender(staffDetail.gender)
+				: staffDetail.gender;
+			const startDate = dayjs(staffDetail.startDate);
+			const lastDate = dayjs(staffDetail.lastDate);
+			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
+			const role = !props.formValue.Input2Form
+				? ConversionToNumberRole(staff.role)
+				: staff.role;
+
+			setBirthday(birthday);
+			setStartDate(startDate);
+			setLastDate(lastDate);
+
+			setValue("birthday", birthday, { shouldDirty: true });
+			setValue("gender", gender, { shouldDirty: true });
+			setValue("employeeCode", staffDetail.employeeCode, { shouldDirty: true });
+			setValue("startDate", startDate, { shouldDirty: true });
+			setValue("lastDate", lastDate, { shouldDirty: true });
+			setValue("retirementReason", staffDetail.retirementReason, {
+				shouldDirty: true,
+			});
+			setValue("role", role, { shouldDirty: true });
+			setValue("isEnabled", staff.isEnabled ? 1 : 0, { shouldDirty: true });
 		});
-	}, []);
+	}, [props.formValue.Input2Form]);
+
+	const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
+	const [startDate, setStartDate] = React.useState<Dayjs | null>(null);
+	const [lastDate, setLastDate] = React.useState<Dayjs | null>(null);
 
 	const { control, handleSubmit, setValue } = useForm<Input2Form>({
 		defaultValues: {
-			shiftPeriod: 0,
-			shiftDeadline: 0,
+			birthday: "",
+			gender: 0,
+			employeeCode: "",
+			startDate: "",
+			lastDate: "",
+			retirementReason: "",
+			role: 0,
 			isEnabled: undefined, // NOTE: デフォルト:未定義
 		},
 	});
 
+	const ConversionToNumberGender = (gender: string) => {
+		if (gender === Gender.MALE) {
+			return 1;
+		}
+		if (gender === Gender.FEMALE) {
+			return 2;
+		}
+		return 0;
+	};
+
+	const ConversionToNumberRole = (role: string) => {
+		if (role === Role.ADMIN) {
+			return 1;
+		}
+		if (role === Role.SHOP_ADMIN) {
+			return 2;
+		}
+		if (role === Role.USER) {
+			return 3;
+		}
+		return 0;
+	};
+
 	const onSubmit = (data: Input2Form) => {
+		data.birthday = birthday;
+		data.startDate = startDate;
+		data.lastDate = lastDate;
 		props.handleNext();
 		props.setFormValue({ ...props.formValue, Input2Form: data });
 	};
@@ -65,13 +139,124 @@ function Input2(props: any) {
 		<div>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Controller
-					name="shiftPeriod"
+					name="birthday"
 					control={control}
 					render={({ field }) => (
-						<FormControl sx={{ mb: 3 }} fullWidth>
-							<FormLabel id="row-radio-buttons-group-label">
-								シフト期間設定
-							</FormLabel>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DemoContainer
+								components={["DatePicker"]}
+								sx={{ width: "30%", mt: 1, mr: 10, mb: 2 }}
+							>
+								<DatePicker
+									{...field}
+									label="誕生日"
+									sx={{ width: "30%" }}
+									value={birthday}
+									onChange={(newBirthday) => setBirthday(newBirthday)}
+									format="YYYY/MM/DD"
+								/>
+							</DemoContainer>
+						</LocalizationProvider>
+					)}
+				/>
+				<Controller
+					name="gender"
+					control={control}
+					render={({ field }) => (
+						<FormControl sx={{ mb: 1 }} fullWidth>
+							<FormLabel id="row-radio-buttons-group-label">性別</FormLabel>
+							<RadioGroup
+								row
+								aria-labelledby="row-radio-buttons-group-label"
+								name="type"
+								onChange={(e) => {
+									const value = parseInt(e.target.value);
+									if (!Number.isNaN(value)) {
+										field.onChange(value);
+									}
+								}}
+								value={field.value === undefined ? "" : field.value}
+							>
+								<FormControlLabel value={1} control={<Radio />} label="男性" />
+								<FormControlLabel value={2} control={<Radio />} label="女性" />
+							</RadioGroup>
+						</FormControl>
+					)}
+				/>
+				<Controller
+					name="employeeCode"
+					control={control}
+					render={({ field }) => (
+						<TextField
+							{...field}
+							sx={{ width: "30%", mt: 1, mr: 60, mb: 2 }}
+							type="text"
+							label="従業員コード"
+						/>
+					)}
+				/>
+				<Controller
+					name="startDate"
+					control={control}
+					render={({ field }) => (
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DemoContainer
+								components={["DatePicker"]}
+								sx={{ display: "inline", width: "30%", mt: 1, mr: 2, mb: 2 }}
+							>
+								<DatePicker
+									{...field}
+									label="入社年月日"
+									sx={{ width: "30%" }}
+									value={startDate}
+									onChange={(newstartDate) => setStartDate(newstartDate)}
+									format="YYYY/MM/DD"
+								/>
+							</DemoContainer>
+						</LocalizationProvider>
+					)}
+				/>
+				<Controller
+					name="lastDate"
+					control={control}
+					render={({ field }) => (
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DemoContainer
+								components={["DatePicker"]}
+								sx={{ display: "inline", width: "30%", mt: 1, mr: 2, mb: 2 }}
+							>
+								<DatePicker
+									{...field}
+									label="退社年月日"
+									sx={{ width: "30%" }}
+									value={lastDate}
+									onChange={(newlastDate) => setLastDate(newlastDate)}
+									format="YYYY/MM/DD"
+								/>
+							</DemoContainer>
+						</LocalizationProvider>
+					)}
+				/>
+				<Controller
+					name="retirementReason"
+					control={control}
+					render={({ field }) => (
+						<TextField
+							{...field}
+							sx={{ width: "61.5%", mt: 2, mr: 30, mb: 1 }}
+							type="text"
+							label="退職理由"
+							multiline
+							rows={4}
+						/>
+					)}
+				/>
+				<Controller
+					name="role"
+					control={control}
+					render={({ field }) => (
+						<FormControl sx={{ mb: 1 }} fullWidth>
+							<FormLabel id="row-radio-buttons-group-label">権限</FormLabel>
 							<RadioGroup
 								row
 								aria-labelledby="row-radio-buttons-group-label"
@@ -87,32 +272,19 @@ function Input2(props: any) {
 								<FormControlLabel
 									value={1}
 									control={<Radio />}
-									label="月2回(15日、末日)"
+									label="システム管理者"
 								/>
-								<FormControlLabel value={2} control={<Radio />} label="月1回" />
+								<FormControlLabel
+									value={2}
+									control={<Radio />}
+									label="店舗管理者"
+								/>
+								<FormControlLabel
+									value={3}
+									control={<Radio />}
+									label="一般ユーザー"
+								/>
 							</RadioGroup>
-						</FormControl>
-					)}
-				/>
-				<Controller
-					name="shiftDeadline"
-					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mt: 1, mb: 1 }} fullWidth>
-							<FormLabel id="row-text--group-label">シフト提出締切日</FormLabel>
-							<div>
-								<span style={{ position: "relative", top: "25px" }}>
-									シフト開始日の
-								</span>
-								<TextField
-									{...field}
-									sx={{ width: "7.5%", mt: 1, mb: 1 }}
-									type="number"
-								/>
-								<span style={{ position: "relative", top: "25px" }}>
-									日前の営業終了時間
-								</span>
-							</div>
 						</FormControl>
 					)}
 				/>
@@ -149,7 +321,7 @@ function Input2(props: any) {
 						variant="outlined"
 						sx={{ mr: 1 }}
 					>
-						確認へ
+						次へ
 					</Button>
 				</Box>
 			</form>

@@ -11,8 +11,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { Dayjs } from "dayjs";
-import { useEffect } from "react";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input2Form {
@@ -29,8 +28,6 @@ function Input2(props: any) {
 	useEffect(() => {
 		if (props.formValue.Input2Form) {
 			const staff = props.formValue.Input2Form;
-
-			console.log(staff);
 
 			setBirthday(staff.birthday);
 			setStartDate(staff.startDate);
@@ -69,9 +66,9 @@ function Input2(props: any) {
 		props.setFormValue({ ...props.formValue, Input2Form: data });
 	};
 
-	const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
-	const [startDate, setStartDate] = React.useState<Dayjs | null>(null);
-	const [lastDate, setLastDate] = React.useState<Dayjs | null>(null);
+	const [birthday, setBirthday] = useState<Dayjs | null>(null);
+	const [startDate, setStartDate] = useState<Dayjs | null>(null);
+	const [lastDate, setLastDate] = useState<Dayjs | null>(null);
 
 	return (
 		<div>
