@@ -9,10 +9,12 @@ export const GET = async (
 ) => {
 	try {
 		const shopId = Number(searchParams.params.shopId);
-		const date = searchParams.params.date;
 
-		const gteDate = new Date(date);
-		const ltDate = new Date(date);
+		const url = new URL(params.url);
+		const date = url.searchParams.get("date");
+
+		const gteDate = new Date(date ?? "");
+		const ltDate = new Date(date ?? "");
 		ltDate.setDate(gteDate.getDate() + 1);
 
 		const attendance = await prismadb.attendance.findMany({
