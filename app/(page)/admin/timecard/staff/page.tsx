@@ -18,35 +18,65 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { Dayjs } from "dayjs";
-import Link from "next/link";
+import dayjs from "dayjs";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const Timecard = () => {
+const StaffTimecard = () => {
+	const searchParams = useSearchParams();
+	const paramShopId = searchParams.get("shopId");
+	const paramUserId = searchParams.get("userId");
+	const paramDate = searchParams.get("date");
+
 	// NOTE: セレクトボックス挙動制御の為,string型にする.
-	const [shopId, setShopId] = useState("");
-	const [shopRows, setShopRows] = useState([]);
-	const [date, setDate] = useState<Dayjs | null>(null);
+	const [userId, setUserId] = useState("");
+	const [date, setDate] = useState<Dayjs | string | null>();
+	const [userRows, setUserRows] = useState([]);
 	const [timecardRows, setTimecardRows] = useState([]);
 
-	// NOTE: 店舗情報取得処理(shopsテーブルからデータを取得し,セレクトボックスに件数分データを表示させる為の準備処理)
 	useEffect(() => {
-		const fetchShopRows = async () => {
-			const response = await fetch("/api/shop", {
+		// NOTE: ユーザー情報取得処理(セレクトボックスに件数分データを表示させる為の準備処理)
+		const fetchUserRows = async () => {
+			const response = await fetch(`/api/staff/${paramShopId}`, {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
-			const responseData = await response.json();
-			const shopRows = responseData.shop;
-			setShopRows(shopRows);
-		};
-		fetchShopRows();
-	});
 
-	// NOTE: 店舗表示
-	const handleShopChange = (e: any) => {
-		setShopId(e.target.value);
+			const responseData = await response.json();
+			const userRows = responseData.user;
+
+			// NOTE: DBからデータを取得したタイミングでセレクトボックスの初期値をセットする.
+			setUserId(paramUserId ? paramUserId : "");
+			setUserRows(userRows);
+		};
+		fetchUserRows();
+
+		// NOTE: タイムカード情報取得処理
+		const fetchTimecard = async () => {
+			const response = await fetch(
+				`/api/timecard/staff/${paramUserId}/?date=${paramDate}`,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				},
+			);
+
+			const responseData = await response.json();
+			const timecard = responseData.attendance;
+
+			setDate(paramDate);
+			setTimecardRows(timecard);
+		};
+		fetchTimecard();
+	}, [paramShopId, paramUserId, paramDate]);
+
+	// NOTE: ユーザー表示
+	const handleUserChange = (e: any) => {
+		setUserId(e.target.value);
 	};
 
 	// NOTE: カレンダー表示
@@ -54,22 +84,39 @@ const Timecard = () => {
 		setDate(e.target.value);
 	};
 
-	// NOTE: 表示押下時,タイムカード情報取得処理
+	// NOTE: 表示ボタン押下時,タイムカード情報取得処理
+	//       表示ボタンを押下したタイミングでデータを取得したい為,初回自動取得時と表示ボタン押下時の処理を分離する.
 	const showTimecard = () => {
 		const fetchTimecard = async () => {
-			const response = await fetch(`/api/timecard/${shopId}?date=${date}`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
+			const response = await fetch(
+				`/api/timecard/staff/${userId}/?date=${date}`,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
 				},
-			});
+			);
 
 			const responseData = await response.json();
 			const timecard = responseData.attendance;
 
+			setUserId(userId);
+			setDate(date);
 			setTimecardRows(timecard);
 		};
 		fetchTimecard();
+	};
+
+	const sliceYMD = (date: string) => {
+		if (!date || date === "null" || date === "undefined") {
+			return null;
+		}
+
+		//const startingPosition = date.indexOf("T") + 1;
+		const sliceYMD = date.substring(0, 10);
+
+		return sliceYMD;
 	};
 
 	const sliceTime = (date: string) => {
@@ -112,16 +159,16 @@ const Timecard = () => {
 				}}
 			>
 				<FormControl sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}>
-					<InputLabel id="demo-simple-select-label">店舗</InputLabel>
+					<InputLabel id="demo-simple-select-label">ユーザー</InputLabel>
 					<Select
 						labelId="demo-simple-select-label"
 						id="demo-simple-select"
-						value={shopId}
-						label="店舗"
-						onChange={handleShopChange}
+						value={userId}
+						label="ユーザー"
+						onChange={handleUserChange}
 					>
-						{shopRows.map((row: any) => (
-							<MenuItem key={row.name} value={row.id}>
+						{userRows.map((row: any) => (
+							<MenuItem key={row.id} value={row.id}>
 								{row.name}
 							</MenuItem>
 						))}
@@ -129,7 +176,8 @@ const Timecard = () => {
 				</FormControl>
 				<TextField
 					sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
-					type="date"
+					type="month"
+					defaultValue={dayjs(date).format("YYYY-MM")}
 					onChange={handleCalenderChange}
 				/>
 				<Button
@@ -145,8 +193,8 @@ const Timecard = () => {
 					<TableHead>
 						<TableRow>
 							<TableCell sx={{ display: "none" }}>ID</TableCell>
-							<TableCell align="center">スタッフID</TableCell>
-							<TableCell align="center">スタッフ名</TableCell>
+							<TableCell align="center">日時</TableCell>
+							<TableCell align="center">店舗名</TableCell>
 							<TableCell align="center">出勤時刻1</TableCell>
 							<TableCell align="center">退勤時刻1</TableCell>
 							<TableCell align="center">出勤時刻2</TableCell>
@@ -162,26 +210,8 @@ const Timecard = () => {
 								<TableCell component="th" scope="row" sx={{ display: "none" }}>
 									{row.id}
 								</TableCell>
-								<TableCell align="center">
-									{row.user.userDetails.map((item: any) => item.employeeCode)}
-								</TableCell>
-								<TableCell
-									align="center"
-									sx={{ color: "blue", textDecoration: "underline" }}
-								>
-									<Link
-										href={{
-											pathname: "/admin/timecard/staff",
-											query: {
-												shopId: row.shopId,
-												userId: row.userId,
-												date: row.clockIn1,
-											},
-										}}
-									>
-										{row.user.name}
-									</Link>
-								</TableCell>
+								<TableCell align="center">{sliceYMD(row.clockIn1)}</TableCell>
+								<TableCell align="center">{row.shop.name}</TableCell>
 								<TableCell align="center">{sliceTime(row.clockIn1)}</TableCell>
 								<TableCell align="center">{sliceTime(row.clockOut1)}</TableCell>
 								<TableCell align="center">{sliceTime(row.clockIn2)}</TableCell>
@@ -195,4 +225,4 @@ const Timecard = () => {
 	);
 };
 
-export default Timecard;
+export default StaffTimecard;
