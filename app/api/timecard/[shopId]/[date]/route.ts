@@ -2,9 +2,14 @@ import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prisma/prismadb";
 
-export const POST = async (req: Request, res: NextResponse) => {
+export const GET = async (
+	params: any,
+	searchParams: any,
+	res: NextResponse,
+) => {
 	try {
-		const { shopId, date } = await req.json();
+		const shopId = Number(searchParams.params.shopId);
+		const date = searchParams.params.date;
 
 		const gteDate = new Date(date);
 		const ltDate = new Date(date);
@@ -42,7 +47,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 			},
 		});
 
-		return NextResponse.json({ attendance: attendance }, { status: 201 });
+		return NextResponse.json({ attendance: attendance }, { status: 200 });
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}

@@ -57,15 +57,11 @@ const Timecard = () => {
 	// NOTE: 表示押下時,タイムカード情報取得処理
 	const showTimecard = () => {
 		const fetchTimecard = async () => {
-			const response = await fetch("/api/timecard", {
-				method: "POST",
+			const response = await fetch(`/api/timecard/${shopId}/${date}`, {
+				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-					shopId: Number(shopId),
-					date: date,
-				}),
 			});
 
 			const responseData = await response.json();
