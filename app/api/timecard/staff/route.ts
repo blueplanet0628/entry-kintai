@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
-
+import { options } from "@/lib/auth/options";
 import prismadb from "@/lib/prisma/prismadb";
+import dayjs from "dayjs";
+import { getServerSession } from "next-auth/next";
+import { NextResponse } from "next/server";
 
 export const GET = async (
 	params: any,
@@ -8,14 +10,17 @@ export const GET = async (
 	res: NextResponse,
 ) => {
 	try {
-		const userId = Number(searchParams.params.userId);
-
+		const session = await getServerSession(options);
+		const userId = Number(session?.user?.id);
 		const url = new URL(params.url);
-		const date = url.searchParams.get("date");
+		const date = dayjs(url.searchParams.get("date")).format("YYYY-MM-DD");
 
+		console.log(date);
 		const gteDate = ExtractionMonth(date);
 		const ltDate = ExtractionMonth(date);
 		ltDate.setMonth(gteDate.getMonth() + 1);
+
+		console.log(session, userId, gteDate, ltDate);
 
 		const attendance = await prismadb.attendance.findMany({
 			where: {
