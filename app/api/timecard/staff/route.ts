@@ -15,12 +15,9 @@ export const GET = async (
 		const url = new URL(params.url);
 		const date = dayjs(url.searchParams.get("date")).format("YYYY-MM-DD");
 
-		console.log(date);
 		const gteDate = ExtractionMonth(date);
 		const ltDate = ExtractionMonth(date);
 		ltDate.setMonth(gteDate.getMonth() + 1);
-
-		console.log(session, userId, gteDate, ltDate);
 
 		const attendance = await prismadb.attendance.findMany({
 			where: {

@@ -28,7 +28,6 @@ const StaffTimecard = () => {
 	useEffect(() => {
 		// NOTE: タイムカード情報取得処理
 		const fetchTimecard = async () => {
-			console.log(date);
 			// TODO: PATHについては,adminページ含めて後日整理する.
 			const response = await fetch(`/api/timecard/staff/?date=${date}`, {
 				method: "GET",

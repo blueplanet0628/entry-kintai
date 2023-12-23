@@ -8,7 +8,6 @@ export const GET = async (
 	res: NextResponse,
 ) => {
 	try {
-		console.log("saisyo");
 		const shopId = Number(searchParams.params.shopId);
 		const userId = Number(searchParams.params.userId);
 
@@ -33,8 +32,6 @@ export const GET = async (
 					.setDate(dayjs(comparedAfterDate).toDate().getDate() + 1),
 			).format("YYYY-MM-DD"),
 		).toDate();
-
-		console.log(shopId, userId, gteDate, ltDate);
 
 		const attendance = await prismadb.attendance.findMany({
 			where: {
@@ -73,7 +70,6 @@ export const GET = async (
 				userId: "asc",
 			},
 		});
-		console.log(attendance);
 
 		return NextResponse.json({ attendance: attendance }, { status: 200 });
 	} catch (err: any) {
