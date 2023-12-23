@@ -1,9 +1,110 @@
-import { Box, Typography } from "@mui/material";
+"use client";
 
-export default function TimecardPage() {
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+const Account = () => {
+	const router = useRouter();
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const data = new FormData(e.currentTarget);
+
+		const response = await fetch("/api/auth/account", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				email: data.get("email"),
+				password: data.get("password"),
+			}),
+		});
+
+		if (response.ok) {
+			router.push("/");
+		} else {
+			console.log("error");
+		}
+	};
+
+	const handleReset = () => {
+		router.push("/staff");
+	};
+
 	return (
-		<Box>
-			<Typography variant="h1">登録情報変更</Typography>
-		</Box>
+		<Container component="main" maxWidth="xs">
+			<CssBaseline />
+			<Box
+				sx={{
+					marginTop: 8,
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+				}}
+			>
+				<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+					<LockOutlinedIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					アカウント変更
+				</Typography>
+				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+					<Grid container spacing={2}>
+						<Grid item xs={12}>
+							<TextField
+								required
+								fullWidth
+								id="email"
+								label="Eメールアドレス"
+								name="email"
+								autoComplete="email"
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								required
+								fullWidth
+								name="password"
+								label="パスワード"
+								type="password"
+								id="password"
+								autoComplete="new-password"
+							/>
+						</Grid>
+					</Grid>
+					<Button
+						type="submit"
+						fullWidth
+						variant="outlined"
+						sx={{ mt: 3, mb: 2 }}
+					>
+						変更
+					</Button>
+					<Box
+						sx={{
+							marginTop: 2,
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+						}}
+					>
+						<Button onClick={handleReset}>戻る</Button>
+					</Box>
+				</Box>
+			</Box>
+		</Container>
 	);
-}
+};
+
+export default Account;

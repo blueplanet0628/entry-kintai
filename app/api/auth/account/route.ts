@@ -13,7 +13,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 		const { email, password } = await req.json();
 
 		// NOTE: セッションからIDを取得する.
-		const id = session?.user?.id;
+		const id = Number(session?.user?.id);
 		// TODO: エラーレスポンスコードは改めて記載する.
 		if (!id)
 			return NextResponse.json({ message: "ID not found." }, { status: 422 });
@@ -27,7 +27,8 @@ export const POST = async (req: Request, res: NextResponse) => {
 		const existingEmailUser = await prismadb.user.findUnique({
 			where: { email },
 		});
-		if (existingEmailUser)
+		// NOTE: 同じ場合(自分自身は含まない)
+		if (existingEmailUser && email !== existingUser.email)
 			return NextResponse.json(
 				{ message: "Duplicate email addresses of other users." },
 				{ status: 422 },
