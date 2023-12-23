@@ -14,8 +14,8 @@ import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import * as React from "react";
 import { mainListItems, secondaryListItems } from "./listitems";
 
@@ -84,8 +84,8 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
 	};
 
 	return (
-		<ThemeProvider theme={defaultTheme}>
-			<LocalizationProvider dateAdapter={AdapterDayjs}>
+		<LocalizationProvider dateAdapter={AdapterDayjs}>
+			<ThemeProvider theme={defaultTheme}>
 				<Box sx={{ display: "flex" }}>
 					<CssBaseline />
 					<AppBar position="absolute" open={open}>
@@ -155,7 +155,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
 						</Container>
 					</Box>
 				</Box>
-			</LocalizationProvider>
-		</ThemeProvider>
+			</ThemeProvider>
+		</LocalizationProvider>
 	);
 }

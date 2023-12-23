@@ -45,7 +45,7 @@ function Input1(props: any) {
 			setValue("phoneNumber3", shop.phoneNumber3, { shouldDirty: true });
 			setValue("phoneNumber4", shop.phoneNumber4, { shouldDirty: true });
 		}
-	}, []);
+	}, [props.formValue.Input1Form]);
 
 	const { control, handleSubmit, setValue } = useForm<Input1Form>({
 		defaultValues: {

@@ -35,10 +35,10 @@ const Shop = () => {
 			setShopRows(shopRows);
 		};
 		fetchShopRows();
-	});
+	}, []);
 
 	// NOTE: 店舗削除処理
-	const deleteShopSubmit = async (e) => {
+	const deleteShopSubmit = async (e: any) => {
 		e.preventDefault();
 
 		const id = e.target.id;
@@ -98,7 +98,7 @@ const Shop = () => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{shopRows.map((row) => (
+						{shopRows.map((row: any) => (
 							<TableRow
 								key={row.name}
 								sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

@@ -41,7 +41,7 @@ const Staff = () => {
 			setShopRows(shopRows);
 		};
 		fetchShopRows();
-	});
+	}, []);
 
 	// NOTE: 店舗選択時,ユーザー情報取得処理
 	const handleChange = (e: SelectChangeEvent) => {

@@ -8,18 +8,18 @@ export const GET = async (
 	res: NextResponse,
 ) => {
 	try {
-		const shopId = Number(searchParams.params.shopId);
+		const userId = Number(searchParams.params.userId);
 
 		const url = new URL(params.url);
 		const date = url.searchParams.get("date");
 
-		const gteDate = new Date(date ?? "");
-		const ltDate = new Date(date ?? "");
-		ltDate.setDate(gteDate.getDate() + 1);
+		const gteDate = ExtractionMonth(date);
+		const ltDate = ExtractionMonth(date);
+		ltDate.setMonth(gteDate.getMonth() + 1);
 
 		const attendance = await prismadb.attendance.findMany({
 			where: {
-				shopId: shopId,
+				userId: userId,
 				clockIn1: {
 					gte: gteDate,
 					lt: ltDate,
@@ -36,16 +36,16 @@ export const GET = async (
 				user: {
 					select: {
 						name: true,
-						userDetails: {
-							select: {
-								employeeCode: true,
-							},
-						},
+					},
+				},
+				shop: {
+					select: {
+						name: true,
 					},
 				},
 			},
 			orderBy: {
-				userId: "asc",
+				clockIn1: "asc",
 			},
 		});
 
@@ -53,4 +53,14 @@ export const GET = async (
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}
+};
+
+// NOTE: 誕生日から年齢を算出する処理
+const ExtractionMonth = (date: string | null) => {
+	const dateY = Number(date?.substring(0, 4));
+	const dateM = Number(date?.substring(5, 7));
+
+	const extractionDate = new Date(dateY, dateM - 1, 1, +9);
+
+	return extractionDate;
 };

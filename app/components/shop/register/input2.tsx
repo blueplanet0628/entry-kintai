@@ -24,7 +24,7 @@ function Input2(props: any) {
 			setValue("shiftDeadline", shop.shiftDeadline, { shouldDirty: true });
 			setValue("isEnabled", shop.isEnabled ? 1 : 0, { shouldDirty: true });
 		}
-	}, []);
+	}, [props.formValue.Input2Form]);
 
 	const { control, handleSubmit, setValue } = useForm<Input2Form>({
 		defaultValues: {
