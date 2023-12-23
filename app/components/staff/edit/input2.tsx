@@ -6,9 +6,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { Gender, Role } from "@prisma/client";
 import { Dayjs } from "dayjs";
@@ -142,21 +140,19 @@ function Input2(props: any) {
 					name="birthday"
 					control={control}
 					render={({ field }) => (
-						<LocalizationProvider dateAdapter={AdapterDayjs}>
-							<DemoContainer
-								components={["DatePicker"]}
-								sx={{ width: "30%", mt: 1, mr: 10, mb: 2 }}
-							>
-								<DatePicker
-									{...field}
-									label="誕生日"
-									sx={{ width: "30%" }}
-									value={birthday}
-									onChange={(newBirthday) => setBirthday(newBirthday)}
-									format="YYYY/MM/DD"
-								/>
-							</DemoContainer>
-						</LocalizationProvider>
+						<DemoContainer
+							components={["DatePicker"]}
+							sx={{ width: "30%", mt: 1, mr: 10, mb: 2 }}
+						>
+							<DatePicker
+								{...field}
+								label="誕生日"
+								sx={{ width: "30%" }}
+								value={birthday}
+								onChange={(newBirthday) => setBirthday(newBirthday)}
+								format="YYYY/MM/DD"
+							/>
+						</DemoContainer>
 					)}
 				/>
 				<Controller
@@ -199,42 +195,38 @@ function Input2(props: any) {
 					name="startDate"
 					control={control}
 					render={({ field }) => (
-						<LocalizationProvider dateAdapter={AdapterDayjs}>
-							<DemoContainer
-								components={["DatePicker"]}
-								sx={{ display: "inline", width: "30%", mt: 1, mr: 2, mb: 2 }}
-							>
-								<DatePicker
-									{...field}
-									label="入社年月日"
-									sx={{ width: "30%" }}
-									value={startDate}
-									onChange={(newstartDate) => setStartDate(newstartDate)}
-									format="YYYY/MM/DD"
-								/>
-							</DemoContainer>
-						</LocalizationProvider>
+						<DemoContainer
+							components={["DatePicker"]}
+							sx={{ display: "inline", width: "30%", mt: 1, mr: 2, mb: 2 }}
+						>
+							<DatePicker
+								{...field}
+								label="入社年月日"
+								sx={{ width: "30%" }}
+								value={startDate}
+								onChange={(newstartDate) => setStartDate(newstartDate)}
+								format="YYYY/MM/DD"
+							/>
+						</DemoContainer>
 					)}
 				/>
 				<Controller
 					name="lastDate"
 					control={control}
 					render={({ field }) => (
-						<LocalizationProvider dateAdapter={AdapterDayjs}>
-							<DemoContainer
-								components={["DatePicker"]}
-								sx={{ display: "inline", width: "30%", mt: 1, mr: 2, mb: 2 }}
-							>
-								<DatePicker
-									{...field}
-									label="退社年月日"
-									sx={{ width: "30%" }}
-									value={lastDate}
-									onChange={(newlastDate) => setLastDate(newlastDate)}
-									format="YYYY/MM/DD"
-								/>
-							</DemoContainer>
-						</LocalizationProvider>
+						<DemoContainer
+							components={["DatePicker"]}
+							sx={{ display: "inline", width: "30%", mt: 1, mr: 2, mb: 2 }}
+						>
+							<DatePicker
+								{...field}
+								label="退社年月日"
+								sx={{ width: "30%" }}
+								value={lastDate}
+								onChange={(newlastDate) => setLastDate(newlastDate)}
+								format="YYYY/MM/DD"
+							/>
+						</DemoContainer>
 					)}
 				/>
 				<Controller

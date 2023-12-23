@@ -13,7 +13,7 @@ function Confirm(props: any) {
 	const searchParams = useSearchParams();
 	const id = searchParams.get("id");
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 
 		const response = await fetch(`/api/shop/edit/${id}`, {

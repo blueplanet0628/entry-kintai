@@ -9,7 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
 function Confirm(props: any) {
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 
 		const response = await fetch("/api/shop/register", {
