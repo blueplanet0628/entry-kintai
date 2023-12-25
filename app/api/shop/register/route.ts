@@ -1,9 +1,14 @@
+import { options } from "@/lib/auth/options";
+import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prisma/prismadb";
 
 // GETでTOPに情報を表示したい
 export const POST = async (req: Request, res: NextResponse) => {
+	const session = await getServerSession(options);
+	const companyId = Number(session?.user?.companyId);
+
 	try {
 		const {
 			type,
@@ -22,77 +27,62 @@ export const POST = async (req: Request, res: NextResponse) => {
 			isEnabled,
 		} = await req.json();
 
-		// NOTE: 型チェック
-		if (
-			typeof type !== "number" ||
-			typeof name !== "string" ||
-			typeof phoneNumber1 !== "string" ||
-			typeof phoneNumber2 !== "string" ||
-			typeof phoneNumber3 !== "string" ||
-			typeof phoneNumber4 !== "string" ||
-			typeof addressPostcode !== "string" ||
-			typeof addressPrefecture !== "string" ||
-			typeof addressCity !== "string" ||
-			typeof addressBlock !== "string" ||
-			typeof addressBuilding !== "string" ||
-			typeof shiftPeriod !== "number" ||
-			typeof shiftDeadline !== "number" ||
-			typeof isEnabled !== "number"
-		) {
-			// TODO: message,statusは適当なので,修正する.
-			return NextResponse.json({ message: "Typeof Error" }, { status: 0 });
-		}
-
-		// NOTE: null/undefinedチェック
-		if (
-			type == null ||
-			name == null ||
-			phoneNumber1 == null ||
-			addressPostcode == null ||
-			addressPrefecture == null ||
-			addressCity == null ||
-			addressBlock == null ||
-			shiftPeriod == null ||
-			shiftDeadline == null ||
-			isEnabled == null
-		) {
-			// TODO: message,statusは適当なので,修正する.
-			return NextResponse.json({ message: "Input Null Error" }, { status: 0 });
-		}
-
-		// NOTE: 現段階において,Companyテーブルのレコードは1つのみなので,固定値とする.
-		// TODO: 将来的にユーザーが所属する会社を条件にcompanyIdを取得する.
-		const companyId = 1;
-
-		//NOTE: 店舗コードは,"A+各会社の店舗レコード数+1"とする.
+		//NOTE: 店舗コードは,"A+各ユーザーのレコード数(0埋め後桁数5)"とする.
 		const codeCounts =
 			(await prismadb.shop.count({
 				where: { companyId: companyId },
 			})) + 1;
-		const code = `A${codeCounts}`;
+		const code = `A${codeCounts.toString().padStart(5, "0")}`;
 
-		const shop = await prismadb.shop.create({
-			data: {
-				companyId,
-				code,
-				type,
-				name,
-				phoneNumber1,
-				phoneNumber2,
-				phoneNumber3,
-				phoneNumber4,
-				addressPostcode,
-				addressPrefecture,
-				addressCity,
-				addressBlock,
-				addressBuilding,
-				shiftPeriod,
-				shiftDeadline,
-				isEnabled: Boolean(isEnabled),
-			},
+		const insertedData = await prismadb.$transaction(async (prismadb) => {
+			// NOTE: 店舗データ挿入
+			const shop = await prismadb.shop.create({
+				data: {
+					companyId: companyId,
+					code,
+					type,
+					name,
+					phoneNumber1,
+					phoneNumber2,
+					phoneNumber3,
+					phoneNumber4,
+					addressPostcode,
+					addressPrefecture,
+					addressCity,
+					addressBlock,
+					addressBuilding,
+					shiftPeriod,
+					shiftDeadline,
+					isEnabled: Boolean(isEnabled),
+				},
+			});
+
+			// NOTE: 店舗間交通費に挿入するshop1Idデータ取得
+			const shopIds = await prismadb.shop.findMany({
+				where: { companyId: companyId },
+				select: {
+					id: true,
+				},
+			});
+
+			// NOTE: 店舗間交通費挿入データ作成
+			const tmpInsertFareBetweenStoreData = shopIds.map((ids: any) => {
+				if (ids.id !== shop.id) {
+					return { shop1Id: Number(ids.id), shop2Id: shop.id };
+				}
+			});
+
+			// NOTE: undefined削除
+			const insertFareBetweenStoreData: any =
+				tmpInsertFareBetweenStoreData.filter((v) => v);
+
+			// NOTE: 店舗間交通費データ挿入
+			const fare = await prismadb.fareBetweenShop.createMany({
+				data: insertFareBetweenStoreData,
+			});
 		});
 
-		return NextResponse.json({ shop }, { status: 201 });
+		return NextResponse.json({ insertedData }, { status: 201 });
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}

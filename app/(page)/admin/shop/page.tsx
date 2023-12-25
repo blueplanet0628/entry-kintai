@@ -12,6 +12,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,35 +21,105 @@ import { useEffect, useState } from "react";
 const Shop = () => {
 	const router = useRouter();
 	const [shopRows, setShopRows] = useState([]);
+	const [fareRows, setFareRows] = useState([]);
+	const [fare, setFare] = useState([]);
+	// NOTE: 店舗削除後,画面が更新されない為,仮置きとして用意.
+	const [deteledShopId, setDeteledShopId] = useState(0);
 
-	// NOTE: Shopテーブルデータ取得処理(Shopテーブルからデータを取得し,画面に件数分データを表示させる為の準備処理)
 	useEffect(() => {
-		const fetchShopRows = async () => {
-			const response = await fetch("/api/shop", {
+		// NOTE: Shopテーブルデータ取得処理(Shopテーブルからデータを取得し,画面に件数分データを表示させる為の準備処理)
+		const fetchTopShopRows = async () => {
+			const responseOfShop = await fetch("/api/shop", {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
-			const responseData = await response.json();
-			const shopRows = responseData.shop;
+			const shopData = await responseOfShop.json();
+			const shopRows = shopData.shop;
+
+			// NOTE: 店舗間交通費取得処理
+			const responseOfFare = await fetch("/api/shop/fare", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			const fareData = await responseOfFare.json();
+			const originalFareRows = fareData.fare;
+			const fare = originalFareRows.map((obj: any) => {
+				return { id: obj.id, fare: obj.fare };
+			});
+
+			const fareRows = originalFareRows.map((obj: any) => {
+				return {
+					id: obj.id,
+					shop1Name: shopRows.find((shop: any) => {
+						return shop.id === obj.shop1Id;
+					}).name,
+					shop2Name: shopRows.find((shop: any) => {
+						return shop.id === obj.shop2Id;
+					}).name,
+					fare: obj.fare,
+				};
+			});
+
 			setShopRows(shopRows);
+			setFare(fare);
+			setFareRows(fareRows);
+			setDeteledShopId(deteledShopId);
 		};
-		fetchShopRows();
-	}, []);
+		fetchTopShopRows();
+	}, [deteledShopId]);
 
 	// NOTE: 店舗削除処理
 	const deleteShopSubmit = async (e: any) => {
 		e.preventDefault();
 
 		const id = e.target.id;
-		const response = await fetch("/api/shop", {
+
+		await fetch("/api/shop", {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
 				id: Number(id),
+			}),
+		});
+		setDeteledShopId(id);
+	};
+
+	// NOTE: 交通費変更処理
+	const changeFare = async (e: any) => {
+		const id = Number(e.target.id.substr(5));
+
+		fare
+			? fare.filter((fare: any) => {
+					if (fare.id === id) {
+						fare.id = id;
+						fare.fare = Number(e.target.value);
+						return fare.id === id;
+					}
+			  })
+			: null;
+	};
+
+	// NOTE: 交通費確定処理
+	const fareSubmit = async (e: any) => {
+		e.preventDefault();
+
+		const id = Number(e.target.id);
+		const targetFare: any = fare.filter((fare: any) => fare.id === id);
+
+		const response = await fetch("/api/shop/fare", {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				id: targetFare[0].id,
+				fare: targetFare[0].fare,
 			}),
 		});
 
@@ -100,7 +171,7 @@ const Shop = () => {
 					<TableBody>
 						{shopRows.map((row: any) => (
 							<TableRow
-								key={row.name}
+								key={row.id}
 								sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
 							>
 								<TableCell component="th" scope="row" sx={{ display: "none" }}>
@@ -134,6 +205,58 @@ const Shop = () => {
 									) : (
 										""
 									)}
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</TableContainer>
+
+			<TableContainer component={Paper} sx={{ mb: "100px" }}>
+				<Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+					<TableHead>
+						<TableRow>
+							<TableCell align="center" colSpan={6}>
+								店舗間交通費設定
+							</TableCell>
+						</TableRow>
+						<TableRow>
+							<TableCell sx={{ display: "none" }}>ID</TableCell>
+							<TableCell align="center">店舗1</TableCell>
+							<TableCell align="center">店舗2</TableCell>
+							<TableCell align="center">交通費</TableCell>
+							<TableCell align="center" />
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{fareRows.map((row: any) => (
+							<TableRow
+								key={row.id}
+								sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+							>
+								<TableCell component="th" scope="row" sx={{ display: "none" }}>
+									{row.id}
+								</TableCell>
+								<TableCell align="center">{row.shop1Name}</TableCell>
+								<TableCell align="center">{row.shop2Name}</TableCell>
+								<TableCell align="center">
+									<TextField
+										id={`fare_${row.id}`}
+										type="number"
+										size="small"
+										onChange={changeFare}
+										defaultValue={row.fare}
+									/>
+									<Typography
+										sx={{ display: "inline-block", mt: 1, mr: 2, mb: 1 }}
+									>
+										円
+									</Typography>
+								</TableCell>
+								<TableCell align="center">
+									<Button id={row.id} variant="outlined" onClick={fareSubmit}>
+										変更
+									</Button>
 								</TableCell>
 							</TableRow>
 						))}
