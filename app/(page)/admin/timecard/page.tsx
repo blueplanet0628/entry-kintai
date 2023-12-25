@@ -66,7 +66,6 @@ const Timecard = () => {
 
 		// NOTE: タイムカード情報取得処理
 		const fetchTimecard = async () => {
-			console.log("aaa");
 			const response = await fetch(
 				`/api/timecard/${shopId}/${userId}/?beforeDate=${beforeDate}&afterDate=${afterDate}`,
 				{

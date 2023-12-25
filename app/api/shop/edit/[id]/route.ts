@@ -120,7 +120,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 			},
 		});
 
-		return NextResponse.json({ shop }, { status: 201 });
+		return new Response(null, { status: 204 });
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}
