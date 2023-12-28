@@ -1,13 +1,15 @@
+import { options } from "@/lib/auth/options";
+import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prisma/prismadb";
 
 export const GET = async (res: NextResponse) => {
 	try {
-		// NOTE: 現段階において,Companyテーブルのレコードは1つのみなので,固定値とする.
-		// TODO: 将来的にユーザーが所属する会社を条件にcompanyIdを取得する.
+		const session = await getServerSession(options);
+		const companyId = Number(session?.user?.companyId);
 		const shop = await prismadb.shop.findMany({
-			where: { companyId: 1 },
+			where: { companyId: companyId },
 			select: {
 				id: true,
 				code: true,
@@ -27,10 +29,21 @@ export const DELETE = async (req: Request, res: NextResponse) => {
 	try {
 		const { id } = await req.json();
 
-		// TODO: 店舗 - ユーザー中間テーブルの対象の店舗IDのレコードを全件削除する.
+		const deletedData = await prismadb.$transaction(async (prismadb) => {
+			// NOTE: 店舗 - ユーザー中間テーブルの対象の店舗IDのレコードを全件削除する.
+			const shopUser = await prismadb.shopUser.deleteMany({
+				where: { shopId: id },
+			});
 
-		const shop = await prismadb.shop.delete({
-			where: { id: id },
+			// NOTE: 店舗 - 店舗間交通費テーブルの対象の店舗IDのレコードを全件削除する.
+			const fare = await prismadb.fareBetweenShop.deleteMany({
+				where: { OR: [{ shop1Id: id }, { shop2Id: id }] },
+			});
+
+			// NOTE: 対象の店舗データを削除する.
+			const shop = await prismadb.shop.delete({
+				where: { id: id },
+			});
 		});
 
 		return new Response(null, { status: 204 });
