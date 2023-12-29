@@ -23,6 +23,12 @@ export class RCS380 implements CardReaderDevice {
 		await this.device.close();
 	}
 
+	public async reset() {
+		await this.device.reset();
+		await this.device.selectConfiguration(1);
+		await this.device.claimInterface(0);
+	}
+
 	public async getIDm() {
 		// INFO:nfc.clf:searching for reader on path usb:054c:06c3
 		// DEBUG:nfc.clf.transport:using libusb-1.0.21
