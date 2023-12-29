@@ -30,6 +30,7 @@ export const GET = async (
 				id: true,
 				name: true,
 				isEnabled: true,
+				cardid: true,
 				userDetails: {
 					select: {
 						nickname: true,

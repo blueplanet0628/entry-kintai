@@ -7,6 +7,7 @@ let staticReader: CardReader | null = null;
 export interface CardReaderDevice {
 	getIDm(): Promise<string>;
 	close(): Promise<void>;
+	reset(): Promise<void>;
 }
 
 export class CardReader {
@@ -63,21 +64,26 @@ export class CardReader {
 	}
 
 	public startIDmPolling(
-		callback: (idm: string, error: boolean) => void,
+		callback: (idm: string, error?: string) => Promise<void>,
 		intervalMillis = 3000,
 	) {
 		if (this.timer !== -1) return;
 
 		this.timer = window.setInterval(async () => {
+			// タブが表示されていない場合は読み取りを行わない
+			if (document.visibilityState !== "visible") return;
+
 			try {
 				const idm = await this.device.getIDm();
 				if (idm) {
-					callback(idm, false);
+					callback(idm);
 				}
-			} catch (e) {
+			} catch (e: any) {
 				console.log(e);
-				callback("", true);
-				if (this.timer !== -1) window.clearInterval(this.timer);
+				callback("", `カードリーダーの読み取りに失敗しました。\n${e.message}`);
+				// if (this.timer !== -1) window.clearInterval(this.timer);
+				// await this.device.reset();
+				this.startIDmPolling(callback, intervalMillis);
 			}
 		}, intervalMillis);
 	}
@@ -87,6 +93,11 @@ export class CardReader {
 			window.clearInterval(this.timer);
 			this.timer = -1;
 		}
+	}
+
+	public async release() {
+		await this.device.close();
+		staticReader = null;
 	}
 
 	public async close() {

@@ -2,16 +2,14 @@
 
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Paper } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -20,24 +18,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import * as React from "react";
 import { mainListItems, secondaryListItems } from "./listitems";
-
-function Copyright(props: any) {
-	return (
-		<Typography
-			variant="body2"
-			color="text.secondary"
-			align="center"
-			{...props}
-		>
-			{"Copyright © "}
-			<Link color="inherit" href="https://mui.com/">
-				Your Website
-			</Link>{" "}
-			{new Date().getFullYear()}
-			{"."}
-		</Typography>
-	);
-}
 
 const drawerWidth: number = 240;
 
@@ -135,11 +115,6 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
 							>
 								勤怠管理システム
 							</Typography>
-							<IconButton color="inherit">
-								<Badge badgeContent={4} color="secondary">
-									<NotificationsIcon />
-								</Badge>
-							</IconButton>
 						</Toolbar>
 					</AppBar>
 					<Drawer variant="permanent" open={open}>
@@ -176,8 +151,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
 					>
 						<Toolbar />
 						<Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-							{children}
-							<Copyright sx={{ pt: 4 }} />
+							<Paper sx={{ padding: 2 }}>{children}</Paper>
 						</Container>
 					</Box>
 				</Box>
