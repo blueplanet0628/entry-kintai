@@ -75,6 +75,7 @@ const StampingModal: React.FC<Props> = ({
 		if (confirmed) {
 			if (device) {
 				device.stopIDmPolling();
+				device.release(); // TODO: キャシュしておきたいが、デバイスエラー時の復旧ができないので都度解放する
 				setDevice(null);
 			}
 			setInnerOpen(false);
@@ -276,7 +277,9 @@ const StampingModal: React.FC<Props> = ({
 						/>
 					</Box>
 					<Box mt={3}>
-						<Typography variant="subtitle1">打刻の種類</Typography>
+						<Typography variant="subtitle1">
+							打刻の種類を選択して下さい。
+						</Typography>
 					</Box>
 					<Box sx={{ mt: 1, display: "flex" }}>
 						<Button

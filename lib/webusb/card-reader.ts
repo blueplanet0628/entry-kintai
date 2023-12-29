@@ -95,6 +95,11 @@ export class CardReader {
 		}
 	}
 
+	public async release() {
+		await this.device.close();
+		staticReader = null;
+	}
+
 	public async close() {
 		await this.device.close();
 	}
