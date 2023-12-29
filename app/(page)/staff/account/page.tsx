@@ -1,7 +1,5 @@
 "use client";
 
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -47,16 +45,12 @@ const Account = () => {
 			<CssBaseline />
 			<Box
 				sx={{
-					marginTop: 8,
 					display: "flex",
 					flexDirection: "column",
 					alignItems: "center",
 				}}
 			>
-				<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
+				<Typography mt={1} variant="h1" align="center">
 					アカウント変更
 				</Typography>
 				<Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>

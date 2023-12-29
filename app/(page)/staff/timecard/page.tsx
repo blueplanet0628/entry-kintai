@@ -1,8 +1,6 @@
 "use client";
 
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Box, Button } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -78,21 +76,9 @@ const StaffTimecard = () => {
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
 			<Box>
 				<CssBaseline />
-				<Box
-					sx={{
-						marginTop: 8,
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-					}}
-				>
-					<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-						<LockOutlinedIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						タイムカード打刻状況
-					</Typography>
-				</Box>
+				<Typography mt={1} variant="h1" align="center">
+					タイムカード打刻状況
+				</Typography>
 				<Box
 					sx={{
 						minWidth: 120,

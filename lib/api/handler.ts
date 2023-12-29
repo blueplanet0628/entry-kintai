@@ -16,13 +16,13 @@ const wrapper = async (
 		const ret = await handler(req, context);
 		return ret;
 	} catch (err: any) {
-		console.log(err);
 		if (err instanceof ApiError) {
 			return NextResponse.json(
 				{ message: err.message },
 				{ status: err.statusCode },
 			);
 		}
+		console.log(err);
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}
 };

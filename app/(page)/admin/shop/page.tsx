@@ -1,8 +1,6 @@
 "use client";
 
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Box } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import { Alert, Box, Snackbar } from "@mui/material";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Paper from "@mui/material/Paper";
@@ -20,6 +18,8 @@ import { useEffect, useState } from "react";
 
 const Shop = () => {
 	const router = useRouter();
+	const [showMessage, setShowMessage] = useState(false);
+	const [message, setMessage] = useState("");
 	const [shopRows, setShopRows] = useState([]);
 	const [fareRows, setFareRows] = useState([]);
 	const [fare, setFare] = useState([]);
@@ -125,6 +125,8 @@ const Shop = () => {
 
 		if (response.ok) {
 			router.push("/admin/shop");
+			setMessage("交通費を変更しました。");
+			setShowMessage(true);
 		} else {
 			console.log("error");
 		}
@@ -133,21 +135,7 @@ const Shop = () => {
 	return (
 		<Box>
 			<CssBaseline />
-			<Box
-				sx={{
-					marginTop: 8,
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					店舗設定
-				</Typography>
-			</Box>
+
 			<Box my={2} flexDirection="row" justifyContent="flex-end" display="flex">
 				<Link href={{ pathname: "/admin/shop/register" }}>
 					<Button variant="outlined" sx={{ align: "right" }}>
@@ -263,6 +251,16 @@ const Shop = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
+
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={showMessage}
+				onClose={() => setShowMessage(false)}
+			>
+				<Alert severity="success" sx={{ width: "100%" }}>
+					{message}
+				</Alert>
+			</Snackbar>
 		</Box>
 	);
 };

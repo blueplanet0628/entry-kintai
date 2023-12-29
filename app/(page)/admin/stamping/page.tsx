@@ -2,6 +2,7 @@
 
 import StampingModal from "@/app/components/stampingmodal";
 import { Button, MenuItem, Select } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select";
 import React, { useEffect } from "react";
 
 type Shop = {
@@ -27,9 +28,20 @@ export default function Stamping() {
 		})();
 	}, [setShopList, setShop]);
 
+	const handleChange = (e: SelectChangeEvent<number>) => {
+		const id = e.target.value;
+		const shop = shopList.find((shop) => shop.id === id);
+		setShop(shop ?? null);
+	};
+
 	return (
 		<>
-			<Select value={shop?.id ?? ""} size="small" sx={{ mr: 1 }}>
+			<Select
+				value={shop?.id ?? ""}
+				size="small"
+				sx={{ mr: 1 }}
+				onChange={handleChange}
+			>
 				{shopList.map((shop) => (
 					<MenuItem key={shop.id} value={shop.id}>
 						{shop.name}
@@ -40,7 +52,7 @@ export default function Stamping() {
 				打刻モードを開始
 			</Button>
 			<StampingModal
-				shopId={shop?.id ?? 0}
+				shop={shop}
 				open={open}
 				onClose={() => {
 					setOpen(false);

@@ -1,8 +1,6 @@
 "use client";
 
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Box, Stack } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -162,21 +160,6 @@ const Timecard = () => {
 	return (
 		<Box>
 			<CssBaseline />
-			<Box
-				sx={{
-					marginTop: 8,
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					タイムカード打刻状況
-				</Typography>
-			</Box>
 			<Box
 				sx={{
 					minWidth: 120,

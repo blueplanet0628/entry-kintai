@@ -3,13 +3,16 @@ import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prisma/prismadb";
+import { Role } from "@prisma/client";
 
 export const GET = async (res: NextResponse) => {
 	try {
 		const session = await getServerSession(options);
 		const companyId = Number(session?.user?.companyId);
+		const where =
+			session?.user?.role === Role.ADMIN ? {} : { companyId: companyId };
 		const shop = await prismadb.shop.findMany({
-			where: { companyId: companyId },
+			where,
 			select: {
 				id: true,
 				code: true,

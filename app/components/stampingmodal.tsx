@@ -34,7 +34,10 @@ const style = {
 };
 
 type Props = {
-	shopId: number;
+	shop: {
+		id: number;
+		name: string;
+	} | null;
 	open: boolean;
 	onClose: () => void;
 	onUpdated: () => void;
@@ -46,12 +49,7 @@ type Staff = {
 	cardid: string;
 };
 
-const StampingModal: React.FC<Props> = ({
-	shopId,
-	open,
-	onClose,
-	onUpdated,
-}) => {
+const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 	const [openRegister, setOpenRegister] = useState(false);
 	const [innerOpen, setInnerOpen] = useState(false);
 	const [showMessage, setShowMessage] = useState(false);
@@ -111,7 +109,7 @@ const StampingModal: React.FC<Props> = ({
 			},
 			body: JSON.stringify({
 				user_id: cardStaff.id,
-				shop_id: shopId,
+				shop_id: shop?.id,
 				mode: modeRef.current,
 				clock_time: currentTime,
 			}),
@@ -138,7 +136,7 @@ const StampingModal: React.FC<Props> = ({
 	};
 
 	const fetchStaffList = async () => {
-		const res = await fetch(`/api/staff/${shopId}`);
+		const res = await fetch(`/api/staff/${shop?.id}`);
 		const data = await res.json();
 		setStaffList(data.user);
 		setStaff(data.user[0]);
@@ -194,10 +192,6 @@ const StampingModal: React.FC<Props> = ({
 		}
 	};
 
-	const onDebugICCard = async () => {
-		await onCardDetected("01010312b01bc5");
-	};
-
 	useEffect(() => {
 		if (open) {
 			setIdm("");
@@ -216,10 +210,10 @@ const StampingModal: React.FC<Props> = ({
 	}, [open]);
 
 	useEffect(() => {
-		if (shopId > 0) {
+		if (shop?.id) {
 			fetchStaffList();
 		}
-	}, [shopId]);
+	}, [shop]);
 
 	useEffect(() => {
 		const handler = window.setInterval(() => {
@@ -244,7 +238,7 @@ const StampingModal: React.FC<Props> = ({
 						fontWeight="bold"
 						component="h2"
 					>
-						打刻モード
+						打刻モード({shop?.name ?? "未選択"})
 					</Typography>
 					<Typography id="modal-modal-description" sx={{ mt: 2 }}>
 						カードリーダーにICカードを置いて下さい。
@@ -369,9 +363,6 @@ const StampingModal: React.FC<Props> = ({
 							onClick={onClickRegisterCommit}
 						>
 							ICカードを登録する
-						</Button>
-						<Button variant="contained" color="success" onClick={onDebugICCard}>
-							ICカードを置く(debug)
 						</Button>
 						<Button
 							variant="contained"

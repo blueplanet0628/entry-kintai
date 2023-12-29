@@ -75,7 +75,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 			typeof isEnabled !== "number"
 		) {
 			// TODO: message,statusは適当なので,修正する.
-			return NextResponse.json({ message: "Typeof Error" }, { status: 0 });
+			return NextResponse.json({ message: "Typeof Error" }, { status: 400 });
 		}
 
 		// NOTE: null/undefinedチェック
@@ -94,7 +94,10 @@ export const PUT = async (req: Request, res: NextResponse) => {
 			isEnabled == null
 		) {
 			// TODO: message,statusは適当なので,修正する.
-			return NextResponse.json({ message: "Input Null Error" }, { status: 0 });
+			return NextResponse.json(
+				{ message: "Input Null Error" },
+				{ status: 400 },
+			);
 		}
 
 		const shop = await prismadb.shop.update({

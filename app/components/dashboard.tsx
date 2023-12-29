@@ -16,7 +16,8 @@ import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import * as React from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { mainListItems, secondaryListItems } from "./listitems";
 
 const drawerWidth: number = 240;
@@ -78,10 +79,26 @@ const defaultTheme = createTheme({
 });
 
 export default function Dashboard({ children }: { children: React.ReactNode }) {
-	const [open, setOpen] = React.useState(true);
+	const [open, setOpen] = useState(true);
+	const pathname = usePathname();
+	const [title, setTitle] = useState("");
 	const toggleDrawer = () => {
 		setOpen(!open);
 	};
+
+	useEffect(() => {
+		if (pathname === "/admin/stamping") {
+			setTitle("打刻モード");
+		} else if (pathname === "/admin/staff") {
+			setTitle("スタッフ設定");
+		} else if (pathname === "/admin/shop") {
+			setTitle("店舗設定");
+		} else if (pathname === "/admin/timecard") {
+			setTitle("タイムカード");
+		} else if (pathname === "/admin/account") {
+			setTitle("アカウント設定");
+		}
+	}, [pathname]);
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -113,7 +130,7 @@ export default function Dashboard({ children }: { children: React.ReactNode }) {
 								noWrap
 								sx={{ flexGrow: 1 }}
 							>
-								勤怠管理システム
+								勤怠管理システム - {title}
 							</Typography>
 						</Toolbar>
 					</AppBar>

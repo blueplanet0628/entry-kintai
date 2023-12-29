@@ -51,6 +51,7 @@ export default function SignIn({ searchParams }: Props) {
 						type="email"
 						name="email"
 						label="メールアドレス"
+						autoComplete="email"
 					/>
 					<TextField
 						size="small"
@@ -58,6 +59,7 @@ export default function SignIn({ searchParams }: Props) {
 						fullWidth
 						type="password"
 						name="password"
+						autoComplete="current-password"
 						label="パスワード"
 					/>
 					<Button variant="contained" type="submit" sx={{ mt: 2 }} fullWidth>

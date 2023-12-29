@@ -1,8 +1,6 @@
 "use client";
 
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Box } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import FormControl from "@mui/material/FormControl";
@@ -16,8 +14,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import { EmploymentStatus } from "@prisma/client";
+import { EmploymentStatus, Role } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -26,6 +24,7 @@ const Staff = () => {
 	const [shopId, setShopId] = useState("");
 	const [shopRows, setShopRows] = useState([]);
 	const [userRows, setUserRows] = useState([]);
+	const { data: session } = useSession();
 
 	// NOTE: 店舗情報取得処理(shopsテーブルからデータを取得し,セレクトボックスに件数分データを表示させる為の準備処理)
 	useEffect(() => {
@@ -130,47 +129,37 @@ const Staff = () => {
 	return (
 		<Box>
 			<CssBaseline />
-			<Box
-				sx={{
-					marginTop: 8,
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				<Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					スタッフ設定
-				</Typography>
-			</Box>
-			<Box
-				sx={{
-					minWidth: 120,
-					marginTop: 5,
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				<FormControl sx={{ width: "30%" }}>
-					<InputLabel id="demo-simple-select-label">店舗</InputLabel>
-					<Select
-						labelId="demo-simple-select-label"
-						id="demo-simple-select"
-						value={shopId}
-						label="店舗"
-						onChange={handleChange}
-					>
-						{shopRows.map((row: any) => (
-							<MenuItem key={row.name} value={row.id}>
-								{row.name}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Box>
+
+			{session?.user?.role === Role.ADMIN ? (
+				<Box
+					sx={{
+						minWidth: 120,
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+					}}
+				>
+					<FormControl sx={{ width: "30%" }}>
+						<InputLabel id="demo-simple-select-label">店舗</InputLabel>
+						<Select
+							labelId="demo-simple-select-label"
+							id="demo-simple-select"
+							value={shopId}
+							label="店舗"
+							onChange={handleChange}
+						>
+							{shopRows.map((row: any) => (
+								<MenuItem key={row.name} value={row.id}>
+									{row.name}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+				</Box>
+			) : (
+				<></>
+			)}
+
 			<Box my={2} flexDirection="row" justifyContent="flex-end" display="flex">
 				<Link href={{ pathname: "/admin/staff/register" }}>
 					<Button variant="outlined" sx={{ align: "right" }}>
@@ -199,9 +188,9 @@ const Staff = () => {
 								key={row.id}
 								sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
 							>
-								<TableCell component="th" scope="row" sx={{ display: "none" }}>
+								{/* <TableCell component="th" scope="row" sx={{ display: "none" }}>
 									{row.id}
-								</TableCell>
+								</TableCell> */}
 								<TableCell align="center">
 									{row.userDetails.map((detail: any) => detail.employeeCode)}
 								</TableCell>

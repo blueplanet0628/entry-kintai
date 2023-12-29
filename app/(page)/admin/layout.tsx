@@ -1,9 +1,7 @@
 import Dashboard from "@/app/components/dashboard";
+import { NextAuthProvider } from "@/app/providers";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
 	title: "勤怠管理システム",
@@ -17,8 +15,10 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="ja">
-			<body className={inter.className}>
-				<Dashboard>{children}</Dashboard>
+			<body>
+				<NextAuthProvider>
+					<Dashboard>{children}</Dashboard>
+				</NextAuthProvider>
 			</body>
 		</html>
 	);
