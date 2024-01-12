@@ -56,13 +56,19 @@ function Input2(props: any) {
 				? data.user.userDetails[0]
 				: props.formValue.Input2Form;
 
-			const birthday = dayjs(staffDetail.birthday);
+			const birthday = staffDetail.birthday
+				? dayjs(staffDetail.birthday)
+				: null;
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
 			const gender = !props.formValue.Input2Form
 				? ConversionToNumberGender(staffDetail.gender)
 				: staffDetail.gender;
-			const startDate = dayjs(staffDetail.startDate);
-			const lastDate = dayjs(staffDetail.lastDate);
+			const startDate = staffDetail.startDate
+				? dayjs(staffDetail.startDate)
+				: null;
+			const lastDate = staffDetail.lastDate
+				? dayjs(staffDetail.startDate)
+				: null;
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
 			const role = !props.formValue.Input2Form
 				? ConversionToNumberRole(staff.role)

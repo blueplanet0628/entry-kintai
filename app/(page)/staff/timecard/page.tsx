@@ -33,10 +33,13 @@ const StaffTimecard = () => {
 					"Content-Type": "application/json",
 				},
 			});
-			const responseData = await response.json();
-			const timecard = responseData.attendance;
-			setDate(date);
-			setTimecardRows(timecard);
+
+			if (response.ok) {
+				const responseData = await response.json();
+				const timecard = responseData.attendance;
+				setDate(date);
+				setTimecardRows(timecard);
+			}
 		};
 		fetchTimecard();
 	}, [date]);

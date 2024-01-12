@@ -27,9 +27,14 @@ export const GET = async (res: NextResponse) => {
 				shop2Id: true,
 				fare: true,
 			},
-			orderBy: {
-				shop1Id: "asc",
-			},
+			orderBy: [
+				{
+					shop1Id: "asc",
+				},
+				{
+					shop2Id: "asc",
+				},
+			],
 		});
 
 		return NextResponse.json({ fare: fare }, { status: 201 });
