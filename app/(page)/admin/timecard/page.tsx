@@ -73,9 +73,12 @@ const Timecard = () => {
 					},
 				},
 			);
-			const responseData = await response.json();
-			const timecard = responseData.attendance;
-			setTimecardRows(timecard);
+
+			if (response.ok) {
+				const responseData = await response.json();
+				const timecard = responseData.attendance;
+				setTimecardRows(timecard);
+			}
 		};
 
 		// NOTE: 初回のみ実行

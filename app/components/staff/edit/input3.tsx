@@ -165,6 +165,10 @@ function Input3(props: any) {
 	};
 
 	const sliceTime = (time: string) => {
+		if (!time) {
+			return undefined;
+		}
+
 		const startingPosition = time.indexOf("T") + 1;
 		const sliceTime = time.substr(startingPosition, 5);
 
