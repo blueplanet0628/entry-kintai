@@ -166,7 +166,7 @@ function Input3(props: any) {
 
 	const sliceTime = (time: string) => {
 		if (!time) {
-			return undefined;
+			return;
 		}
 
 		const startingPosition = time.indexOf("T") + 1;
