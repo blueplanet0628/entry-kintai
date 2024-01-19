@@ -1,10 +1,16 @@
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { NextRequest, NextResponse } from "next/server";
 
 import { ApiHandler } from "@/lib/api/handler";
 import prismadb from "@/lib/prisma/prismadb";
 import { StampMode } from "@/types/shims";
 import { ApiError } from "next/dist/server/api-utils";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Tokyo");
 
 export const POST = ApiHandler(async (req: NextRequest) => {
 	const {
@@ -53,13 +59,14 @@ export const POST = ApiHandler(async (req: NextRequest) => {
 	// 出勤（clock_in1）が昨日の0時以降の最新のattendanceを取得する
 	const current = dayjs(clock_time - (clock_time % 1000)); // ミリ秒を切り捨てる
 	const date = current.toDate();
+	const yesterday = current.add(-1, "days").startOf("day").toDate();
 	let todayAttendance = await prismadb.attendance.findFirst({
 		where: {
 			userId: user.id,
 			shopId: shop.id,
 			// 本日の出勤
 			clockIn1: {
-				gte: current.add(-1, "days").startOf("day").toDate(),
+				gte: yesterday,
 			},
 		},
 		orderBy: { clockIn1: "desc" },
