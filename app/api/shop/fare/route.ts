@@ -1,10 +1,10 @@
 import { options } from "@/lib/auth/options";
 import { getServerSession } from "next-auth/next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import prismadb from "@/lib/prisma/prismadb";
 
-export const GET = async (res: NextResponse) => {
+export const GET = async (req: NextRequest) => {
 	try {
 		const session = await getServerSession(options);
 		const companyId = session?.user?.companyId;

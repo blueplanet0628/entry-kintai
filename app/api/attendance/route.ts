@@ -5,7 +5,7 @@ import { ApiHandler } from "@/lib/api/handler";
 import prismadb from "@/lib/prisma/prismadb";
 
 const getAttendance = async (req: NextRequest) => {
-	const { cardid, shop_id } = await req.json();
+	const { cardid, shop_id, is_in } = await req.json();
 
 	const user = await prismadb.user.findUnique({
 		where: { cardid },
@@ -36,6 +36,7 @@ const getAttendance = async (req: NextRequest) => {
 	}
 
 	// 今日作成されたattendanceを取得する
+	const clock_time = new Date();
 	const current = dayjs(clock_time);
 	const c = {
 		gte: current.startOf("day").toDate(),

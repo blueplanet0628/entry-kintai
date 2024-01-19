@@ -2,7 +2,7 @@ import prismadb from "@/lib/prisma/prismadb";
 
 import { NextResponse } from "next/server";
 
-export const GET = async (params, searchParams, res: NextResponse) => {
+export const GET = async (params: any, searchParams: any) => {
 	try {
 		const paramId = Number(searchParams.params.id);
 
