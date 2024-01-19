@@ -55,6 +55,7 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 	const [showMessage, setShowMessage] = useState(false);
 	const [message, setMessage] = useState("");
 	const [idm, setIdm] = useState("");
+	const [idmForRegister, setIdmForRegister] = useState("");
 	const [device, setDevice] = useState<CardReader | null>(null);
 	const [staffList, setStaffList] = useState<Staff[]>([]);
 	const [staff, setStaff] = useState<Staff | null>(null);
@@ -62,8 +63,8 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 	const [mode, setMode] = useState<StampMode>("none");
 	const modeRef = useRef<StampMode>();
 	modeRef.current = mode;
-	// const idmRef = useRef<string>();
-	// idmRef.current = idm;
+	const openRegisterRef = useRef<boolean>();
+	openRegisterRef.current = openRegister;
 	const staffListRef = useRef<Staff[]>([]);
 	staffListRef.current = staffList;
 	const [currentTime, setCurrentTime] = useState<number>(new Date().getTime());
@@ -88,6 +89,12 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 			alert(error);
 			return;
 		}
+
+		if (openRegisterRef.current) {
+			setIdmForRegister(newIdm);
+			return;
+		}
+
 		if (modeRef.current === "none" || idm === newIdm) return;
 
 		setIdm(newIdm);
@@ -163,7 +170,7 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 			alert("従業員を選択して下さい。");
 			return;
 		}
-		if (!idm) {
+		if (!idmForRegister) {
 			alert("ICカードを読み取らせてください。");
 			return;
 		}
@@ -177,7 +184,7 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					cardid: idm,
+					cardid: idmForRegister,
 				}),
 			});
 			if (res.ok) {
@@ -185,8 +192,9 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 				setOpenRegister(false);
 				fetchStaffList();
 			} else {
+				const data = await res.json();
 				alert(
-					`ICカードの登録に失敗しました。status: ${res.status}: ${res.statusText}`,
+					`ICカードの登録に失敗しました。status: ${res.status}: ${data.message || ""}`,
 				);
 			}
 		}
@@ -306,7 +314,10 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 						<Button
 							variant="contained"
 							color="success"
-							onClick={() => setOpenRegister(true)}
+							onClick={() => {
+								setIdmForRegister("");
+								setOpenRegister(true);
+							}}
 						>
 							ICカードの登録
 						</Button>
@@ -336,7 +347,7 @@ const StampingModal: React.FC<Props> = ({ shop, open, onClose, onUpdated }) => {
 							id="standard-size-small"
 							size="medium"
 							variant="standard"
-							value={idm}
+							value={idmForRegister}
 						/>
 					</Box>
 					<Box sx={{ mt: 3 }}>

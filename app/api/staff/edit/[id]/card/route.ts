@@ -25,6 +25,17 @@ export const POST = async (
 			);
 		}
 
+		const currentUser = await prismadb.user.findUnique({
+			where: { cardid },
+		});
+
+		if (currentUser != null) {
+			return NextResponse.json(
+				{ message: "このICカードはすでに使用されています。" },
+				{ status: 400 },
+			);
+		}
+
 		const user = await prismadb.user.update({
 			where: { id: id },
 			data: {
