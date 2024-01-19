@@ -31,6 +31,10 @@ export const options: NextAuthOptions = {
 					throw new Error("Email does not exists");
 				}
 
+				if (!credentials) {
+					throw new Error("Invalid credentials");
+				}
+
 				const isCorrectPassword = await bcrypt.compare(
 					credentials.password,
 					user.password,

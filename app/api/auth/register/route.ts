@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prisma/prismadb";
+import { Role } from "@prisma/client";
 
 // ユーザー新規登録API
 export const POST = async (req: Request, res: NextResponse) => {
@@ -35,7 +36,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 				name,
 				email,
 				password: hashedPassword,
-				role: 1, // NOTE: 本登録処理は必然的に管理者ユーザーとなる為,管理者用ロールとする.
+				role: Role.ADMIN, // NOTE: 本登録処理は必然的に管理者ユーザーとなる為,管理者用ロールとする.
 				isEnabled: true, // NOTE: 本登録処理は必然的に管理者ユーザーとなる為,有効とする.
 			},
 		});
