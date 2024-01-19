@@ -1,6 +1,12 @@
 import prismadb from "@/lib/prisma/prismadb";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { NextResponse } from "next/server";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Tokyo");
 
 export const GET = async (
 	params: any,
@@ -71,7 +77,15 @@ export const GET = async (
 			},
 		});
 
-		return NextResponse.json({ attendance: attendance }, { status: 200 });
+		const rows = attendance.map((row) => ({
+			...row,
+			clockIn1: row.clockIn1 ? dayjs(row.clockIn1).tz().format() : null,
+			clockOut1: row.clockOut1 ? dayjs(row.clockOut1).tz().format() : null,
+			clockIn2: row.clockIn2 ? dayjs(row.clockIn2).tz().format() : null,
+			clockOut2: row.clockOut2 ? dayjs(row.clockOut2).tz().format() : null,
+		}))
+
+		return NextResponse.json({ attendance: rows }, { status: 200 });
 	} catch (err: any) {
 		return NextResponse.json({ message: err.message }, { status: 500 });
 	}
