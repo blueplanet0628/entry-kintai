@@ -85,7 +85,7 @@ const Staff = () => {
 
 	// NOTE: 誕生日から年齢を算出する処理
 	const ConversionToAge = (birthday: string[]) => {
-		if (birthday == null || !birthday.length) {
+		if (birthday == null || birthday[0] == null || !birthday.length) {
 			return "-";
 		}
 
@@ -214,7 +214,7 @@ const Staff = () => {
 												  : detail.employmentStatus ===
 														  EmploymentStatus.SUBCONTRACTING
 													  ? "業務委託"
-													  : "アルバイト",
+													  : "",
 									)}
 								</TableCell>
 								<TableCell align="center">
