@@ -17,7 +17,7 @@ export interface Input2Form {
 	gender: number;
 	startDate: Dayjs | null;
 	lastDate: Dayjs | null;
-	retirementReason: string;
+	retirementReason: string | null;
 	role: number;
 	isEnabled: number;
 }
@@ -47,7 +47,6 @@ function Input2(props: any) {
 		defaultValues: {
 			birthday: "",
 			gender: 0,
-
 			startDate: "",
 			lastDate: "",
 			retirementReason: "",

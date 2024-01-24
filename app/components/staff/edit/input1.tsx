@@ -28,14 +28,14 @@ export interface Input1Form {
 	firstName: string;
 	lastNameKana: string;
 	firstNameKana: string;
-	nickname: string;
+	nickname: string | null;
 	addressPostcode: string;
 	addressPrefecture: string;
 	addressCity: string;
 	addressBlock: string;
-	addressBuilding: string;
+	addressBuilding: string | null;
 	phoneNumber1: string;
-	phoneNumber2: string;
+	phoneNumber2: string | null;
 }
 
 function Input1(props: any) {
@@ -114,6 +114,10 @@ function Input1(props: any) {
 				setShopName(shop.shopName);
 			}
 
+			const nickname = shop.nickname ? shop.nickname : "";
+			const addressBuilding = shop.addressBuilding ? shop.addressBuilding : "";
+			const phoneNumber2 = shop.phoneNumber2 ? shop.phoneNumber2 : "";
+
 			setValue("shopCode", shopCode, { shouldDirty: true });
 			setValue("shopName", shopName, { shouldDirty: true });
 
@@ -128,7 +132,7 @@ function Input1(props: any) {
 			setValue("firstNameKana", staffDetail.firstNameKana, {
 				shouldDirty: true,
 			});
-			setValue("nickname", staffDetail.nickname, { shouldDirty: true });
+			setValue("nickname", nickname, { shouldDirty: true });
 			setValue("addressPostcode", staffDetail.addressPostcode, {
 				shouldDirty: true,
 			});
@@ -137,11 +141,11 @@ function Input1(props: any) {
 			});
 			setValue("addressCity", staffDetail.addressCity, { shouldDirty: true });
 			setValue("addressBlock", staffDetail.addressBlock, { shouldDirty: true });
-			setValue("addressBuilding", staffDetail.addressBuilding, {
+			setValue("addressBuilding", addressBuilding, {
 				shouldDirty: true,
 			});
 			setValue("phoneNumber1", staffDetail.phoneNumber1, { shouldDirty: true });
-			setValue("phoneNumber2", staffDetail.phoneNumber2, { shouldDirty: true });
+			setValue("phoneNumber2", phoneNumber2, { shouldDirty: true });
 		});
 	}, [props.formValue.Input1Form]);
 

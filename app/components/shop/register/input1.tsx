@@ -16,14 +16,14 @@ export interface Input1Form {
 	type: number;
 	name: string;
 	phoneNumber1: string;
-	phoneNumber2: string;
+	phoneNumber2: string | null;
 	addressPostcode: string;
 	addressPrefecture: string;
 	addressCity: string;
 	addressBlock: string;
-	addressBuilding: string;
-	phoneNumber3: string;
-	phoneNumber4: string;
+	addressBuilding: string | null;
+	phoneNumber3: string | null;
+	phoneNumber4: string | null;
 }
 
 function Input1(props: any) {

@@ -163,7 +163,7 @@ function Confirm(props: any) {
 					戻る
 				</Button>
 				<Button onClick={handleSubmit} variant="outlined">
-					提出
+					確定
 				</Button>
 			</Box>
 		</div>

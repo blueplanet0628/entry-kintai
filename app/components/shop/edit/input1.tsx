@@ -18,14 +18,14 @@ export interface Input1Form {
 	type: number;
 	name: string;
 	phoneNumber1: string;
-	phoneNumber2: string;
+	phoneNumber2: string | null;
 	addressPostcode: string;
 	addressPrefecture: string;
 	addressCity: string;
 	addressBlock: string;
-	addressBuilding: string;
-	phoneNumber3: string;
-	phoneNumber4: string;
+	addressBuilding: string | null;
+	phoneNumber3: string | null;
+	phoneNumber4: string | null;
 }
 
 function Input1(props: any) {
@@ -54,20 +54,25 @@ function Input1(props: any) {
 				? data.shop
 				: props.formValue.Input1Form;
 
+			const phoneNumber2 = shop.phoneNumber2 ? shop.phoneNumber2 : "";
+			const phoneNumber3 = shop.phoneNumber3 ? shop.phoneNumber3 : "";
+			const phoneNumber4 = shop.phoneNumber4 ? shop.phoneNumber4 : "";
+			const addressBuilding = shop.addressBuilding ? shop.addressBuilding : "";
+
 			setValue("code", shop.code, { shouldDirty: true });
 			setValue("type", shop.type, { shouldDirty: true });
 			setValue("name", shop.name, { shouldDirty: true });
 			setValue("phoneNumber1", shop.phoneNumber1, { shouldDirty: true });
-			setValue("phoneNumber2", shop.phoneNumber2, { shouldDirty: true });
+			setValue("phoneNumber2", phoneNumber2, { shouldDirty: true });
 			setValue("addressPostcode", shop.addressPostcode, { shouldDirty: true });
 			setValue("addressPrefecture", shop.addressPrefecture, {
 				shouldDirty: true,
 			});
 			setValue("addressCity", shop.addressCity, { shouldDirty: true });
 			setValue("addressBlock", shop.addressBlock, { shouldDirty: true });
-			setValue("addressBuilding", shop.addressBuilding, { shouldDirty: true });
-			setValue("phoneNumber3", shop.phoneNumber3, { shouldDirty: true });
-			setValue("phoneNumber4", shop.phoneNumber4, { shouldDirty: true });
+			setValue("addressBuilding", addressBuilding, { shouldDirty: true });
+			setValue("phoneNumber3", phoneNumber3, { shouldDirty: true });
+			setValue("phoneNumber4", phoneNumber4, { shouldDirty: true });
 		});
 	}, [props.formValue.Input1Form]);
 

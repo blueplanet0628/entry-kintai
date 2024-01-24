@@ -22,7 +22,7 @@ export interface Input2Form {
 	employeeCode: string;
 	startDate: Dayjs | null;
 	lastDate: Dayjs | null;
-	retirementReason: string;
+	retirementReason: string | null;
 	role: number;
 	isEnabled: number;
 }
@@ -69,6 +69,9 @@ function Input2(props: any) {
 			const lastDate = staffDetail.lastDate
 				? dayjs(staffDetail.startDate)
 				: null;
+			const retirementReason = staffDetail.retirementReason
+				? staffDetail.retirementReason
+				: "";
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
 			const role = !props.formValue.Input2Form
 				? ConversionToNumberRole(staff.role)
@@ -83,7 +86,7 @@ function Input2(props: any) {
 			setValue("employeeCode", staffDetail.employeeCode, { shouldDirty: true });
 			setValue("startDate", startDate, { shouldDirty: true });
 			setValue("lastDate", lastDate, { shouldDirty: true });
-			setValue("retirementReason", staffDetail.retirementReason, {
+			setValue("retirementReason", retirementReason, {
 				shouldDirty: true,
 			});
 			setValue("role", role, { shouldDirty: true });
