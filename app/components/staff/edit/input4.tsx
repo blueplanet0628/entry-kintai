@@ -46,26 +46,43 @@ function Input4(props: any) {
 				? data.user.userDetails[0]
 				: props.formValue.Input4Form;
 
+			const bankName = staffDetail?.bankName ? staffDetail.bankName : "";
+			const bankCode = staffDetail?.bankCode ? staffDetail.bankCode : "";
+			const bankBranchName = staffDetail?.bankBranchName
+				? staffDetail.bankBranchName
+				: "";
+			const bankBranchCode = staffDetail?.bankBranchCode
+				? staffDetail.bankBranchCode
+				: "";
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
-			const bankAccountType = !props.formValue.Input4Form
-				? ConversionToNumberBankAccountType(staffDetail.bankAccountType)
-				: staffDetail.bankAccountType;
+			const bankAccountType =
+				!props.formValue.Input4Form && staffDetail != null
+					? ConversionToNumberBankAccountType(staffDetail.bankAccountType)
+					: staffDetail
+					  ? staffDetail.bankAccountType
+					  : 0;
+			const bankAccountNumber = staffDetail?.bankAccountNumber
+				? staffDetail.bankAccountNumber
+				: "";
+			const bankAccountHolder = staffDetail?.bankAccountHolder
+				? staffDetail.bankAccountHolder
+				: "";
 
-			setValue("bankName", staffDetail.bankName, { shouldDirty: true });
-			setValue("bankCode", staffDetail.bankCode, { shouldDirty: true });
-			setValue("bankBranchName", staffDetail.bankBranchName, {
+			setValue("bankName", bankName, { shouldDirty: true });
+			setValue("bankCode", bankCode, { shouldDirty: true });
+			setValue("bankBranchName", bankBranchName, {
 				shouldDirty: true,
 			});
-			setValue("bankBranchCode", staffDetail.bankBranchCode, {
+			setValue("bankBranchCode", bankBranchCode, {
 				shouldDirty: true,
 			});
 			setValue("bankAccountType", bankAccountType, {
 				shouldDirty: true,
 			});
-			setValue("bankAccountNumber", staffDetail.bankAccountNumber, {
+			setValue("bankAccountNumber", bankAccountNumber, {
 				shouldDirty: true,
 			});
-			setValue("bankAccountHolder", staffDetail.bankAccountHolder, {
+			setValue("bankAccountHolder", bankAccountHolder, {
 				shouldDirty: true,
 			});
 		});

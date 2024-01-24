@@ -110,10 +110,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 		// NOTE: Format UserDetail Table Data
 		const enumEmploymentStatus =
 			ConversionToEnumEmploymentStatus(employmentStatus);
-		// NOTE: 誕生日はNULLを許可していないので,関数の結果がnullだった場合,フォームから受け取った値をセットする.
-		const tmpBirthdayValue = ConversionToDate(birthday);
-		const birthdayValue = tmpBirthdayValue ? tmpBirthdayValue : birthday;
-
+		const birthdayValue = ConversionToDate(birthday);
 		const enumGender = ConversionToEnumGender(gender);
 		const startDateValue = ConversionToDate(startDate);
 		const lastDateValue = ConversionToDate(lastDate);
@@ -161,7 +158,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 					userId: id,
 				},
 				data: {
-					userId: user.id,
+					userId: id,
 					employmentStatus: enumEmploymentStatus,
 					lastName,
 					firstName,
@@ -184,7 +181,7 @@ export const PUT = async (req: Request, res: NextResponse) => {
 					wage: enumWage,
 					timeframe1StartTime: timeframe1StartTimeValue,
 					timeframe1EndTime: timeframe1EndTimeValue,
-					timeframe1Salary: timeframe1Salary,
+					timeframe1Salary,
 					timeframe2StartTime: timeframe2StartTimeValue,
 					timeframe2EndTime: timeframe2EndTimeValue,
 					timeframe2Salary,
@@ -204,6 +201,54 @@ export const PUT = async (req: Request, res: NextResponse) => {
 					bankAccountHolder,
 				},
 			});
+
+			if (userDetail.count === 0) {
+				await prismadb.userDetail.create({
+					data: {
+						userId: id,
+						employmentStatus: enumEmploymentStatus,
+						lastName,
+						firstName,
+						lastNameKana,
+						firstNameKana,
+						nickname,
+						addressPostcode,
+						addressPrefecture,
+						addressCity,
+						addressBlock,
+						addressBuilding,
+						phoneNumber1,
+						phoneNumber2,
+						birthday: birthdayValue,
+						gender: enumGender,
+						employeeCode: employeeCode,
+						startDate: startDateValue,
+						lastDate: lastDateValue,
+						retirementReason,
+						wage: enumWage,
+						timeframe1StartTime: timeframe1StartTimeValue,
+						timeframe1EndTime: timeframe1EndTimeValue,
+						timeframe1Salary,
+						timeframe2StartTime: timeframe2StartTimeValue,
+						timeframe2EndTime: timeframe2EndTimeValue,
+						timeframe2Salary,
+						timeframe3StartTime: timeframe3StartTimeValue,
+						timeframe3EndTime: timeframe3EndTimeValue,
+						timeframe3Salary,
+						fareSetting: enumFareSetting,
+						dailyRate,
+						fixedMonth,
+						nonPayment,
+						bankName,
+						bankCode,
+						bankBranchName,
+						bankBranchCode,
+						bankAccountType: enumBankAccountType,
+						bankAccountNumber,
+						bankAccountHolder,
+					},
+				});
+			}
 
 			if (userDetail.count >= 2) {
 				throw new Error("There are two or more results.");
@@ -295,7 +340,7 @@ const ConversionToEnumEmploymentStatus = (employmentStatus: number) => {
 		case 4:
 			return EmploymentStatus.SUBCONTRACTING;
 		default:
-			return EmploymentStatus.PART_TIME;
+			return null;
 	}
 };
 
@@ -308,7 +353,7 @@ const ConversionToEnumWage = (wage: number) => {
 		case 3:
 			return Wage.MONTHLY;
 		default:
-			return Wage.HOURLY;
+			return null;
 	}
 };
 
