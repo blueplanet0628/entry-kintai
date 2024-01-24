@@ -219,7 +219,9 @@ function Confirm(props: any) {
 											<TableCell>
 												{props.formValue.Input2Form.gender === 1
 													? "男性"
-													: "女性"}
+													: props.formValue.Input2Form.gender === 2
+													  ? "女性"
+													  : "男性"}
 											</TableCell>
 										</TableRow>
 										<TableRow>
@@ -279,7 +281,9 @@ function Confirm(props: any) {
 													? "時給"
 													: props.formValue.Input3Form.wage === 2
 													  ? "日給"
-													  : "月給"}
+													  : props.formValue.Input3Form.wage === 3
+														  ? "月給"
+														  : ""}
 											</TableCell>
 										</TableRow>
 										<TableRow>

@@ -291,7 +291,9 @@ function Confirm(props: any) {
 													? "時給"
 													: props.formValue.Input3Form.wage === 2
 													  ? "日給"
-													  : "月給"}
+													  : props.formValue.Input3Form.wage === 3
+														  ? "月給"
+														  : ""}
 											</TableCell>
 										</TableRow>
 										<TableRow>
