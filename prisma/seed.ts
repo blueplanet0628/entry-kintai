@@ -85,7 +85,7 @@ async function main() {
 				addressCity: "豊島区",
 				addressPrefecture: "東京都",
 				addressBlock: `東-${i}`,
-				shiftPeriod: 7,
+				shiftPeriod: 1,
 				shiftDeadline: 10,
 				isEnabled: true,
 			},

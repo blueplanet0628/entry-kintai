@@ -26,14 +26,14 @@ export interface Input1Form {
 	firstName: string;
 	lastNameKana: string;
 	firstNameKana: string;
-	nickname: string;
+	nickname: string | null;
 	addressPostcode: string;
 	addressPrefecture: string;
 	addressCity: string;
 	addressBlock: string;
-	addressBuilding: string;
+	addressBuilding: string | null;
 	phoneNumber1: string;
-	phoneNumber2: string;
+	phoneNumber2: string | null;
 }
 
 function Input1(props: any) {

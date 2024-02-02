@@ -28,14 +28,14 @@ export interface Input1Form {
 	firstName: string;
 	lastNameKana: string;
 	firstNameKana: string;
-	nickname: string;
+	nickname: string | null;
 	addressPostcode: string;
 	addressPrefecture: string;
 	addressCity: string;
 	addressBlock: string;
-	addressBuilding: string;
+	addressBuilding: string | null;
 	phoneNumber1: string;
-	phoneNumber2: string;
+	phoneNumber2: string | null;
 }
 
 function Input1(props: any) {
@@ -95,9 +95,42 @@ function Input1(props: any) {
 				: props.formValue.Input1Form.password;
 
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
-			const employmentStatus = !props.formValue.Input1Form
-				? ConversionToNumberEmploymentStatus(staffDetail.employmentStatus)
-				: staffDetail.employmentStatus;
+			const employmentStatus =
+				!props.formValue.Input1Form && staffDetail != null
+					? ConversionToNumberEmploymentStatus(staffDetail.employmentStatus)
+					: staffDetail
+					  ? staffDetail.employmentStatus
+					  : 0;
+			const lastName = staffDetail?.lastName ? staffDetail.lastName : "";
+			const firstName = staffDetail?.firstName ? staffDetail.firstName : "";
+			const lastNameKana = staffDetail?.lastNameKana
+				? staffDetail.lastNameKana
+				: "";
+			const firstNameKana = staffDetail?.firstNameKana
+				? staffDetail.firstNameKana
+				: "";
+			const nickname = staffDetail?.nickname ? staffDetail.nickname : "";
+			const addressPostcode = staffDetail?.addressPostcode
+				? staffDetail.addressPostcode
+				: "";
+			const addressPrefecture = staffDetail?.addressPrefecture
+				? staffDetail.addressPrefecture
+				: "";
+			const addressCity = staffDetail?.addressCity
+				? staffDetail.addressCity
+				: "";
+			const addressBlock = staffDetail?.addressBlock
+				? staffDetail.addressBlock
+				: "";
+			const addressBuilding = staffDetail?.addressBuilding
+				? staffDetail.addressBuilding
+				: "";
+			const phoneNumber1 = staffDetail?.phoneNumber1
+				? staffDetail.phoneNumber1
+				: "";
+			const phoneNumber2 = staffDetail?.phoneNumber2
+				? staffDetail.phoneNumber2
+				: "";
 
 			if (!props.formValue.Input1Form) {
 				// TODO: map関数を何度も使用しない形が望ましい.
@@ -122,26 +155,42 @@ function Input1(props: any) {
 			setValue("employmentStatus", employmentStatus, {
 				shouldDirty: true,
 			});
-			setValue("lastName", staffDetail.lastName, { shouldDirty: true });
-			setValue("firstName", staffDetail.firstName, { shouldDirty: true });
-			setValue("lastNameKana", staffDetail.lastNameKana, { shouldDirty: true });
-			setValue("firstNameKana", staffDetail.firstNameKana, {
+			setValue("lastName", lastName, {
 				shouldDirty: true,
 			});
-			setValue("nickname", staffDetail.nickname, { shouldDirty: true });
-			setValue("addressPostcode", staffDetail.addressPostcode, {
+			setValue("firstName", firstName, {
 				shouldDirty: true,
 			});
-			setValue("addressPrefecture", staffDetail.addressPrefecture, {
+			setValue("lastNameKana", lastNameKana, {
 				shouldDirty: true,
 			});
-			setValue("addressCity", staffDetail.addressCity, { shouldDirty: true });
-			setValue("addressBlock", staffDetail.addressBlock, { shouldDirty: true });
-			setValue("addressBuilding", staffDetail.addressBuilding, {
+			setValue("firstNameKana", firstNameKana, {
 				shouldDirty: true,
 			});
-			setValue("phoneNumber1", staffDetail.phoneNumber1, { shouldDirty: true });
-			setValue("phoneNumber2", staffDetail.phoneNumber2, { shouldDirty: true });
+			setValue("nickname", nickname, {
+				shouldDirty: true,
+			});
+			setValue("addressPostcode", addressPostcode, {
+				shouldDirty: true,
+			});
+			setValue("addressPrefecture", addressPrefecture, {
+				shouldDirty: true,
+			});
+			setValue("addressCity", addressCity, {
+				shouldDirty: true,
+			});
+			setValue("addressBlock", addressBlock, {
+				shouldDirty: true,
+			});
+			setValue("addressBuilding", addressBuilding, {
+				shouldDirty: true,
+			});
+			setValue("phoneNumber1", phoneNumber1, {
+				shouldDirty: true,
+			});
+			setValue("phoneNumber2", phoneNumber2, {
+				shouldDirty: true,
+			});
 		});
 	}, [props.formValue.Input1Form]);
 

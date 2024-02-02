@@ -12,20 +12,20 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input3Form {
-	wage: number;
-	timeframe1StartTime: string;
-	timeframe1EndTime: string;
-	timeframe1Salary: number;
-	timeframe2StartTime: string;
-	timeframe2EndTime: string;
-	timeframe2Salary: number;
-	timeframe3StartTime: string;
-	timeframe3EndTime: string;
-	timeframe3Salary: number;
-	fareSetting: number;
-	dailyRate: number;
-	fixedMonth: number;
-	nonPayment: number;
+	wage: number | null;
+	timeframe1StartTime: string | null | undefined;
+	timeframe1EndTime: string | null | undefined;
+	timeframe1Salary: number | null;
+	timeframe2StartTime: string | null | undefined;
+	timeframe2EndTime: string | null | undefined;
+	timeframe2Salary: number | null;
+	timeframe3StartTime: string | null | undefined;
+	timeframe3EndTime: string | null | undefined;
+	timeframe3Salary: number | null;
+	fareSetting: number | null;
+	dailyRate: number | null;
+	fixedMonth: number | null;
+	nonPayment: number | null;
 }
 
 function Input3(props: any) {
@@ -58,31 +58,50 @@ function Input3(props: any) {
 				: props.formValue.Input3Form;
 
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
-			const wage = !props.formValue.Input3Form
-				? ConversionToNumberWage(staffDetail.wage)
-				: staffDetail.wage;
-			const timeframe1StartTime = !props.formValue.Input3Form
+			const wage =
+				!props.formValue.Input3Form && staffDetail != null
+					? ConversionToNumberWage(staffDetail.wage)
+					: staffDetail
+					  ? staffDetail.wage
+					  : 0;
+
+			const timeframe1StartTime = staffDetail?.timeframe1StartTime
 				? sliceTime(staffDetail.timeframe1StartTime)
-				: staffDetail.timeframe1StartTime;
-			const timeframe1EndTime = !props.formValue.Input3Form
+				: "";
+			const timeframe1EndTime = staffDetail?.timeframe1EndTime
 				? sliceTime(staffDetail.timeframe1EndTime)
-				: staffDetail.timeframe1EndTime;
-			const timeframe2StartTime = !props.formValue.Input3Form
+				: "";
+			const timeframe1Salary = staffDetail?.timeframe1Salary
+				? staffDetail.timeframe1Salary
+				: 0;
+			const timeframe2StartTime = staffDetail?.timeframe2StartTime
 				? sliceTime(staffDetail.timeframe2StartTime)
-				: staffDetail.timeframe2StartTime;
-			const timeframe2EndTime = !props.formValue.Input3Form
+				: "";
+			const timeframe2EndTime = staffDetail?.timeframe2EndTime
 				? sliceTime(staffDetail.timeframe2EndTime)
-				: staffDetail.timeframe2EndTime;
-			const timeframe3StartTime = !props.formValue.Input3Form
+				: "";
+			const timeframe2Salary = staffDetail?.timeframe2Salary
+				? staffDetail.timeframe2Salary
+				: 0;
+			const timeframe3StartTime = staffDetail?.timeframe3StartTime
 				? sliceTime(staffDetail.timeframe3StartTime)
-				: staffDetail.timeframe3StartTime;
-			const timeframe3EndTime = !props.formValue.Input3Form
+				: "";
+			const timeframe3EndTime = staffDetail?.timeframe3EndTime
 				? sliceTime(staffDetail.timeframe3EndTime)
-				: staffDetail.timeframe3EndTime;
+				: "";
+			const timeframe3Salary = staffDetail?.timeframe3Salary
+				? staffDetail.timeframe3Salary
+				: 0;
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
-			const fareSetting = !props.formValue.Input3Form
-				? ConversionToNumberFareSetting(staffDetail.fareSetting)
-				: staffDetail.fareSetting;
+			const fareSetting =
+				!props.formValue.Input3Form && staffDetail != null
+					? ConversionToNumberFareSetting(staffDetail.fareSetting)
+					: staffDetail
+					  ? staffDetail.fareSetting
+					  : 0;
+			const dailyRate = staffDetail?.dailyRate ? staffDetail.dailyRate : 0;
+			const fixedMonth = staffDetail?.fixedMonth ? staffDetail.fixedMonth : 0;
+			const nonPayment = staffDetail?.nonPayment ? staffDetail.nonPayment : 0;
 
 			setValue("wage", wage, { shouldDirty: true });
 			setValue("timeframe1StartTime", timeframe1StartTime, {
@@ -91,7 +110,7 @@ function Input3(props: any) {
 			setValue("timeframe1EndTime", timeframe1EndTime, {
 				shouldDirty: true,
 			});
-			setValue("timeframe1Salary", staffDetail.timeframe1Salary, {
+			setValue("timeframe1Salary", timeframe1Salary, {
 				shouldDirty: true,
 			});
 			setValue("timeframe2StartTime", timeframe2StartTime, {
@@ -100,7 +119,7 @@ function Input3(props: any) {
 			setValue("timeframe2EndTime", timeframe2EndTime, {
 				shouldDirty: true,
 			});
-			setValue("timeframe2Salary", staffDetail.timeframe2Salary, {
+			setValue("timeframe2Salary", timeframe2Salary, {
 				shouldDirty: true,
 			});
 			setValue("timeframe3StartTime", timeframe3StartTime, {
@@ -109,13 +128,13 @@ function Input3(props: any) {
 			setValue("timeframe3EndTime", timeframe3EndTime, {
 				shouldDirty: true,
 			});
-			setValue("timeframe3Salary", staffDetail.timeframe3Salary, {
+			setValue("timeframe3Salary", timeframe3Salary, {
 				shouldDirty: true,
 			});
 			setValue("fareSetting", fareSetting, { shouldDirty: true });
-			setValue("dailyRate", staffDetail.dailyRate, { shouldDirty: true });
-			setValue("fixedMonth", staffDetail.fixedMonth, { shouldDirty: true });
-			setValue("nonPayment", staffDetail.nonPayment, { shouldDirty: true });
+			setValue("dailyRate", dailyRate, { shouldDirty: true });
+			setValue("fixedMonth", fixedMonth, { shouldDirty: true });
+			setValue("nonPayment", nonPayment, { shouldDirty: true });
 		});
 	}, [props.formValue.Input3Form]);
 

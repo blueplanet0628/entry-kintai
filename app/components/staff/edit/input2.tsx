@@ -19,10 +19,10 @@ import { Controller, useForm } from "react-hook-form";
 export interface Input2Form {
 	birthday: Dayjs | null;
 	gender: number;
-	employeeCode: string;
+	employeeCode: string | null;
 	startDate: Dayjs | null;
 	lastDate: Dayjs | null;
-	retirementReason: string;
+	retirementReason: string | null;
 	role: number;
 	isEnabled: number;
 }
@@ -56,19 +56,28 @@ function Input2(props: any) {
 				? data.user.userDetails[0]
 				: props.formValue.Input2Form;
 
-			const birthday = staffDetail.birthday
+			const birthday = staffDetail?.birthday
 				? dayjs(staffDetail.birthday)
 				: null;
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
-			const gender = !props.formValue.Input2Form
-				? ConversionToNumberGender(staffDetail.gender)
-				: staffDetail.gender;
-			const startDate = staffDetail.startDate
+			const gender =
+				!props.formValue.Input2Form && staffDetail != null
+					? ConversionToNumberGender(staffDetail.gender)
+					: staffDetail
+					  ? staffDetail.gender
+					  : 0;
+			const employeeCode = staffDetail?.employeeCode
+				? staffDetail.employeeCode
+				: "";
+			const startDate = staffDetail?.startDate
 				? dayjs(staffDetail.startDate)
 				: null;
-			const lastDate = staffDetail.lastDate
-				? dayjs(staffDetail.startDate)
+			const lastDate = staffDetail?.lastDate
+				? dayjs(staffDetail.lastDate)
 				: null;
+			const retirementReason = staffDetail?.retirementReason
+				? staffDetail.retirementReason
+				: "";
 			// TODO: DBから取得した情報を数値型に変換しない形が望ましい.
 			const role = !props.formValue.Input2Form
 				? ConversionToNumberRole(staff.role)
@@ -80,10 +89,10 @@ function Input2(props: any) {
 
 			setValue("birthday", birthday, { shouldDirty: true });
 			setValue("gender", gender, { shouldDirty: true });
-			setValue("employeeCode", staffDetail.employeeCode, { shouldDirty: true });
+			setValue("employeeCode", employeeCode, { shouldDirty: true });
 			setValue("startDate", startDate, { shouldDirty: true });
 			setValue("lastDate", lastDate, { shouldDirty: true });
-			setValue("retirementReason", staffDetail.retirementReason, {
+			setValue("retirementReason", retirementReason, {
 				shouldDirty: true,
 			});
 			setValue("role", role, { shouldDirty: true });
