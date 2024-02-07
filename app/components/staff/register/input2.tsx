@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
@@ -18,7 +18,7 @@ export interface Input2Form {
 	startDate: Dayjs | null;
 	lastDate: Dayjs | null;
 	retirementReason: string | null;
-	role: number;
+	role: number | string;
 	isEnabled: number;
 }
 
@@ -50,7 +50,7 @@ function Input2(props: any) {
 			startDate: "",
 			lastDate: "",
 			retirementReason: "",
-			role: 0,
+			role: "",
 			isEnabled: 1, // NOTE: デフォルト:有効
 		},
 	});
@@ -109,6 +109,11 @@ function Input2(props: any) {
 							>
 								<FormControlLabel value={1} control={<Radio />} label="男性" />
 								<FormControlLabel value={2} control={<Radio />} label="女性" />
+								<FormControlLabel
+									value={0}
+									control={<Radio />}
+									label="未回答"
+								/>
 							</RadioGroup>
 						</FormControl>
 					)}
@@ -168,8 +173,18 @@ function Input2(props: any) {
 				<Controller
 					name="role"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mb: 1 }} fullWidth>
+					rules={{
+						required: {
+							value: true,
+							message: "権限を選択してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ mb: 1 }}
+							fullWidth
+							error={errors.role ? true : false}
+						>
 							<FormLabel id="row-radio-buttons-group-label">権限</FormLabel>
 							<RadioGroup
 								row
@@ -199,14 +214,25 @@ function Input2(props: any) {
 									label="一般ユーザー"
 								/>
 							</RadioGroup>
+							<FormHelperText>{errors.role?.message || ""}</FormHelperText>
 						</FormControl>
 					)}
 				/>
 				<Controller
 					name="isEnabled"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mt: 1, mb: 1 }} fullWidth>
+					rules={{
+						required: {
+							value: true,
+							message: "状態を選択してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ mt: 1, mb: 1 }}
+							fullWidth
+							error={errors.isEnabled ? true : false}
+						>
 							<FormLabel id="row-radio-buttons-group-label">状態</FormLabel>
 							<RadioGroup
 								row
@@ -223,6 +249,7 @@ function Input2(props: any) {
 								<FormControlLabel value={1} control={<Radio />} label="有効" />
 								<FormControlLabel value={0} control={<Radio />} label="無効" />
 							</RadioGroup>
+							<FormHelperText>{errors.isEnabled?.message || ""}</FormHelperText>
 						</FormControl>
 					)}
 				/>

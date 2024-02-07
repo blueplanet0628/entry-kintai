@@ -121,48 +121,96 @@ function Input4(props: any) {
 				<Controller
 					name="bankName"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 15,
+							message: "銀行名は15文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="銀行名"
+							error={errors.bankName ? true : false}
+							helperText={errors.bankName?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="bankCode"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						minLength: {
+							value: 4,
+							message: "銀行コードは4文字で入力してください。",
+						},
+						maxLength: {
+							value: 4,
+							message: "銀行コードは4文字で入力してください。",
+						},
+						pattern: {
+							value: /^[0-9]+$/,
+							message: "銀行コードは半角数字で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 30, mb: 1 }}
 							type="text"
 							label="銀行コード"
+							error={errors.bankCode ? true : false}
+							helperText={errors.bankCode?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="bankBranchName"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 15,
+							message: "支店名は15文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="支店名"
+							error={errors.bankBranchName ? true : false}
+							helperText={errors.bankBranchName?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="bankBranchCode"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						minLength: {
+							value: 3,
+							message: "支店コードは3文字で入力してください。",
+						},
+						maxLength: {
+							value: 3,
+							message: "支店コードは3文字で入力してください。",
+						},
+						pattern: {
+							value: /^[0-9]+$/,
+							message: "支店コードは半角数字で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 30, mb: 1 }}
 							type="text"
 							label="支店コード"
+							error={errors.bankBranchCode ? true : false}
+							helperText={errors.bankBranchCode?.message as string}
 						/>
 					)}
 				/>
@@ -193,24 +241,52 @@ function Input4(props: any) {
 				<Controller
 					name="bankAccountNumber"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						minLength: {
+							value: 7,
+							message: "口座番号は7文字で入力してください。",
+						},
+						maxLength: {
+							value: 7,
+							message: "口座番号は7文字で入力してください。",
+						},
+						pattern: {
+							value: /^[0-9]+$/,
+							message: "口座番号は半角数字で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="口座番号"
+							error={errors.bankAccountNumber ? true : false}
+							helperText={errors.bankAccountNumber?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="bankAccountHolder"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 40,
+							message: "口座名義は40文字以下で入力してください。",
+						},
+						pattern: {
+							value: /^[\uFF61-\uFF9F\s]+$/,
+							message: "口座名義は半角カタカナで入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 30, mb: 1 }}
 							type="text"
 							label="口座名義"
+							error={errors.bankAccountHolder ? true : false}
+							helperText={errors.bankAccountHolder?.message as string}
 						/>
 					)}
 				/>

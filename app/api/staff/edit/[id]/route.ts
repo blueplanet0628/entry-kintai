@@ -325,7 +325,7 @@ const ConversionToEnumGender = (gender: number) => {
 		case 2:
 			return Gender.FEMALE;
 		default:
-			return Gender.MALE;
+			return Gender.UNANSWERED;
 	}
 };
 
@@ -340,7 +340,7 @@ const ConversionToEnumEmploymentStatus = (employmentStatus: number) => {
 		case 4:
 			return EmploymentStatus.SUBCONTRACTING;
 		default:
-			return null;
+			return EmploymentStatus.PART_TIME;
 	}
 };
 

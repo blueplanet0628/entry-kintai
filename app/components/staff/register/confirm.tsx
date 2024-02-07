@@ -221,7 +221,7 @@ function Confirm(props: any) {
 													? "男性"
 													: props.formValue.Input2Form.gender === 2
 													  ? "女性"
-													  : "男性"}
+													  : "未回答"}
 											</TableCell>
 										</TableRow>
 										<TableRow>

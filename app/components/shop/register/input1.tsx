@@ -3,6 +3,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -13,7 +14,7 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input1Form {
-	type: number;
+	type: string | number;
 	name: string;
 	phoneNumber1: string;
 	phoneNumber2: string | null;
@@ -49,7 +50,7 @@ function Input1(props: any) {
 
 	const { control, handleSubmit, setValue } = useForm<Input1Form>({
 		defaultValues: {
-			type: 0,
+			type: "",
 			name: "",
 			phoneNumber1: "",
 			phoneNumber2: "",
@@ -74,8 +75,14 @@ function Input1(props: any) {
 				<Controller
 					name="type"
 					control={control}
-					render={({ field }) => (
-						<FormControl>
+					rules={{
+						required: {
+							value: true,
+							message: "店舗タイプを選択してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl error={errors.type ? true : false}>
 							<FormLabel id="row-radio-buttons-group-label">
 								店舗タイプ
 							</FormLabel>
@@ -98,63 +105,109 @@ function Input1(props: any) {
 									label="フランチャイズ"
 								/>
 							</RadioGroup>
+							<FormHelperText>{errors.type?.message || ""}</FormHelperText>
 						</FormControl>
 					)}
 				/>
 				<Controller
 					name="name"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						required: { value: true, message: "店舗名を入力してください。" },
+						maxLength: {
+							value: 100,
+							message: "店舗名は100文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ mt: 1, mb: 1 }}
 							type="text"
 							label="店舗名"
 							fullWidth
+							error={errors.name ? true : false}
+							helperText={errors.name?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="phoneNumber1"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						required: { value: true, message: "電話番号を入力してください。" },
+						maxLength: {
+							value: 13,
+							message: "電話番号は13文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="電話番号1"
+							error={errors.phoneNumber1 ? true : false}
+							helperText={errors.phoneNumber1?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="phoneNumber2"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 13,
+							message: "電話番号は13文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 30, mb: 1 }}
 							type="text"
 							label="電話番号2"
+							error={errors.phoneNumber2 ? true : false}
+							helperText={errors.phoneNumber2?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="addressPostcode"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						required: { value: true, message: "郵便番号を入力してください。" },
+						maxLength: {
+							value: 8,
+							message: "郵便番号は8文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="郵便番号"
+							error={errors.addressPostcode ? true : false}
+							helperText={errors.addressPostcode?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="addressPrefecture"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}>
+					rules={{
+						validate: (form) => {
+							if (!form) {
+								return "都道府県を選択してください。";
+							}
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
+							error={errors.addressPrefecture ? true : false}
+						>
 							<InputLabel sx={{ minWidth: 330 }} id="area-label">
 								都道府県
 							</InputLabel>
@@ -207,67 +260,111 @@ function Input1(props: any) {
 								<MenuItem value={"鹿児島県"}>鹿児島県</MenuItem>
 								<MenuItem value={"沖縄県"}>沖縄県</MenuItem>
 							</Select>
+							<FormHelperText>
+								{errors.addressPrefecture?.message || ""}
+							</FormHelperText>
 						</FormControl>
 					)}
 				/>
 				<Controller
 					name="addressCity"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						required: { value: true, message: "住所を入力してください。" },
+						maxLength: {
+							value: 200,
+							message: "住所は200文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "61.5%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="市区町村"
+							error={errors.addressCity ? true : false}
+							helperText={errors.addressCity?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="addressBlock"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 200,
+							message: "番地は200文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "37%", mt: 1, mb: 1 }}
 							type="text"
 							label="番地"
+							error={errors.addressBlock ? true : false}
+							helperText={errors.addressBlock?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="addressBuilding"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 200,
+							message: "建物名は200文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ mt: 1, mb: 1 }}
 							type="text"
 							label="建物名"
 							fullWidth
+							error={errors.addressBuilding ? true : false}
+							helperText={errors.addressBuilding?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="phoneNumber3"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 13,
+							message: "電話番号は13文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
 							type="text"
 							label="電話番号1"
+							error={errors.phoneNumber3 ? true : false}
+							helperText={errors.phoneNumber3?.message as string}
 						/>
 					)}
 				/>
 				<Controller
 					name="phoneNumber4"
 					control={control}
-					render={({ field }) => (
+					rules={{
+						maxLength: {
+							value: 13,
+							message: "電話番号は13文字以下で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
 						<TextField
 							{...field}
 							sx={{ width: "30%", mt: 1, mr: 50, mb: 1 }}
 							type="text"
 							label="電話番号2"
+							error={errors.phoneNumber4 ? true : false}
+							helperText={errors.phoneNumber4?.message as string}
 						/>
 					)}
 				/>

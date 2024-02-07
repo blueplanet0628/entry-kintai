@@ -142,7 +142,7 @@ export const POST = async (req: Request, res: NextResponse) => {
 					wage: enumWage,
 					timeframe1StartTime: timeframe1StartTimeValue,
 					timeframe1EndTime: timeframe1EndTimeValue,
-					timeframe1Salary: timeframe1Salary,
+					timeframe1Salary,
 					timeframe2StartTime: timeframe2StartTimeValue,
 					timeframe2EndTime: timeframe2EndTimeValue,
 					timeframe2Salary,
@@ -229,7 +229,7 @@ const ConversionToEnumGender = (gender: number) => {
 		case 2:
 			return Gender.FEMALE;
 		default:
-			return Gender.MALE;
+			return Gender.UNANSWERED;
 	}
 };
 
@@ -244,7 +244,7 @@ const ConversionToEnumEmploymentStatus = (employmentStatus: number) => {
 		case 4:
 			return EmploymentStatus.SUBCONTRACTING;
 		default:
-			return null;
+			return EmploymentStatus.PART_TIME;
 	}
 };
 

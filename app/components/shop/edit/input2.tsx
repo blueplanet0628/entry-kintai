@@ -3,6 +3,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -11,7 +12,7 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export interface Input2Form {
-	shiftPeriod: number;
+	shiftPeriod: number | string;
 	shiftDeadline: number;
 	isEnabled: number;
 }
@@ -50,7 +51,7 @@ function Input2(props: any) {
 
 	const { control, handleSubmit, setValue } = useForm<Input2Form>({
 		defaultValues: {
-			shiftPeriod: 0,
+			shiftPeriod: "",
 			shiftDeadline: 0,
 			isEnabled: undefined, // NOTE: デフォルト:未定義
 		},
@@ -67,8 +68,18 @@ function Input2(props: any) {
 				<Controller
 					name="shiftPeriod"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mb: 3 }} fullWidth>
+					rules={{
+						required: {
+							value: true,
+							message: "シフト期間設定を選択してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ mb: 3 }}
+							fullWidth
+							error={errors.shiftPeriod ? true : false}
+						>
 							<FormLabel id="row-radio-buttons-group-label">
 								シフト期間設定
 							</FormLabel>
@@ -91,14 +102,31 @@ function Input2(props: any) {
 								/>
 								<FormControlLabel value={2} control={<Radio />} label="月1回" />
 							</RadioGroup>
+							<FormHelperText>
+								{errors.shiftPeriod?.message || ""}
+							</FormHelperText>
 						</FormControl>
 					)}
 				/>
 				<Controller
 					name="shiftDeadline"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mt: 1, mb: 1 }} fullWidth>
+					rules={{
+						required: {
+							value: true,
+							message: "シフト提出締切日を入力してください。",
+						},
+						min: {
+							value: 0,
+							message: "シフト提出締切日は0日以上で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ mt: 1, mb: 1 }}
+							fullWidth
+							error={errors.shiftDeadline ? true : false}
+						>
 							<FormLabel id="row-text--group-label">シフト提出締切日</FormLabel>
 							<div>
 								<span style={{ position: "relative", top: "25px" }}>
@@ -108,19 +136,37 @@ function Input2(props: any) {
 									{...field}
 									sx={{ width: "7.5%", mt: 1, mb: 1 }}
 									type="number"
+									InputProps={{
+										inputProps: {
+											min: 0,
+										},
+									}}
 								/>
 								<span style={{ position: "relative", top: "25px" }}>
 									日前の営業終了時間
 								</span>
 							</div>
+							<FormHelperText>
+								{errors.shiftDeadline?.message || ""}
+							</FormHelperText>
 						</FormControl>
 					)}
 				/>
 				<Controller
 					name="isEnabled"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mt: 1, mb: 1 }} fullWidth>
+					rules={{
+						required: {
+							value: true,
+							message: "状態を入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ mt: 1, mb: 1 }}
+							fullWidth
+							error={errors.isEnabled ? true : false}
+						>
 							<FormLabel id="row-radio-buttons-group-label">状態</FormLabel>
 							<RadioGroup
 								row
@@ -137,6 +183,7 @@ function Input2(props: any) {
 								<FormControlLabel value={1} control={<Radio />} label="有効" />
 								<FormControlLabel value={0} control={<Radio />} label="無効" />
 							</RadioGroup>
+							<FormHelperText>{errors.isEnabled?.message || ""}</FormHelperText>
 						</FormControl>
 					)}
 				/>

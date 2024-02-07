@@ -26,6 +26,7 @@ enum EmploymentStatus {
 enum Gender {
   MALE
   FEMALE
+  UNANSWERED
 }
 
 enum Wage {
@@ -61,7 +62,7 @@ model Company {
 model Shop {
   id                 Int        @id @default(autoincrement())
   companyId          Int        @map("company_id")
-  code               String     @db.VarChar(10)
+  code               String     @db.VarChar(10) @unique
   type               Int        @db.TinyInt()
   name               String     @db.VarChar(255)
   phoneNumber1       String     @db.VarChar(13) @map("phone_number1")
@@ -71,7 +72,7 @@ model Shop {
   addressPostcode    String     @db.VarChar(8) @map("address_postcode")
   addressPrefecture  String     @db.VarChar(8) @map("address_prefecture")
   addressCity        String     @db.VarChar(255) @map("address_city")
-  addressBlock       String     @db.VarChar(255) @map("address_block")
+  addressBlock       String?    @db.VarChar(255) @map("address_block")
   addressBuilding    String?    @db.VarChar(255) @map("address_building")
   shiftPeriod        Int        @db.TinyInt() @map("shift_period")
   shiftDeadline      Int        @db.SmallInt() @map("shift_deadline")
@@ -117,19 +118,19 @@ model UserDetail {
   employmentStatus     EmploymentStatus? @map("employment_status")
   lastName             String            @db.VarChar(255) @map("last_name")
   firstName            String            @db.VarChar(255) @map("first_name")
-  lastNameKana         String            @db.VarChar(255) @map("last_name_kana")
-  firstNameKana        String            @db.VarChar(255) @map("first_name_kana")
+  lastNameKana         String?           @db.VarChar(255) @map("last_name_kana")
+  firstNameKana        String?           @db.VarChar(255) @map("first_name_kana")
   nickname             String?           @db.VarChar(255)
-  addressPostcode      String            @db.VarChar(8) @map("address_postcode")
-  addressPrefecture    String            @db.VarChar(8) @map("address_prefecture")
-  addressCity          String            @db.VarChar(255) @map("address_city")
-  addressBlock         String            @db.VarChar(255) @map("address_block")
+  addressPostcode      String?           @db.VarChar(8) @map("address_postcode")
+  addressPrefecture    String?           @db.VarChar(8) @map("address_prefecture")
+  addressCity          String?           @db.VarChar(255) @map("address_city")
+  addressBlock         String?           @db.VarChar(255) @map("address_block")
   addressBuilding      String?           @db.VarChar(255) @map("address_building")
-  phoneNumber1         String            @db.VarChar(13) @map("phone_number1")
+  phoneNumber1         String?           @db.VarChar(13) @map("phone_number1")
   phoneNumber2         String?           @db.VarChar(13) @map("phone_number2")
   birthday             DateTime?         @db.Date
-  gender               Gender        
-  employeeCode         String            @db.VarChar(10) @map("employee_code")
+  gender               Gender?
+  employeeCode         String            @db.VarChar(10) @map("employee_code") @unique
   startDate            DateTime?         @db.Date @map("start_date")
   lastDate             DateTime?         @db.Date @map("last_date")
   retirementReason     String?           @db.Text @map("retirement_reason")

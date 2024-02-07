@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
@@ -264,8 +264,17 @@ function Input3(props: any) {
 					<Controller
 						name="timeframe1Salary"
 						control={control}
-						render={({ field }) => (
-							<FormControl sx={{ mt: 1, mr: 0, mb: 1 }}>
+						rules={{
+							min: {
+								value: 0,
+								message: "給与設定は0以上で入力してください。",
+							},
+						}}
+						render={({ field, formState: { errors } }) => (
+							<FormControl
+								sx={{ mt: 1, mr: 0, mb: 1 }}
+								error={errors.timeframe1Salary ? true : false}
+							>
 								<FormLabel id="row-radio-buttons-group-label">
 									給与設定
 								</FormLabel>
@@ -274,6 +283,9 @@ function Input3(props: any) {
 									sx={{ mt: 1, mr: 2, mb: 1 }}
 									type="number"
 								/>
+								<FormHelperText>
+									{errors.timeframe1Salary?.message || ""}
+								</FormHelperText>
 							</FormControl>
 						)}
 					/>
@@ -316,8 +328,17 @@ function Input3(props: any) {
 					<Controller
 						name="timeframe2Salary"
 						control={control}
-						render={({ field }) => (
-							<FormControl sx={{ mt: 1, mr: 0, mb: 1 }}>
+						rules={{
+							min: {
+								value: 0,
+								message: "給与設定は0以上で入力してください。",
+							},
+						}}
+						render={({ field, formState: { errors } }) => (
+							<FormControl
+								sx={{ mt: 1, mr: 0, mb: 1 }}
+								error={errors.timeframe2Salary ? true : false}
+							>
 								<FormLabel id="row-radio-buttons-group-label">
 									給与設定
 								</FormLabel>
@@ -326,6 +347,9 @@ function Input3(props: any) {
 									sx={{ mt: 1, mr: 2, mb: 1 }}
 									type="number"
 								/>
+								<FormHelperText>
+									{errors.timeframe2Salary?.message || ""}
+								</FormHelperText>
 							</FormControl>
 						)}
 					/>
@@ -368,8 +392,17 @@ function Input3(props: any) {
 					<Controller
 						name="timeframe3Salary"
 						control={control}
-						render={({ field }) => (
-							<FormControl sx={{ mt: 1, mr: 0, mb: 1 }}>
+						rules={{
+							min: {
+								value: 0,
+								message: "給与設定は0以上で入力してください。",
+							},
+						}}
+						render={({ field, formState: { errors } }) => (
+							<FormControl
+								sx={{ mt: 1, mr: 0, mb: 1 }}
+								error={errors.timeframe3Salary ? true : false}
+							>
 								<FormLabel id="row-radio-buttons-group-label">
 									給与設定
 								</FormLabel>
@@ -378,6 +411,9 @@ function Input3(props: any) {
 									sx={{ mt: 1, mr: 2, mb: 1 }}
 									type="number"
 								/>
+								<FormHelperText>
+									{errors.timeframe3Salary?.message || ""}
+								</FormHelperText>
 							</FormControl>
 						)}
 					/>
@@ -413,10 +449,16 @@ function Input3(props: any) {
 									<Controller
 										name="dailyRate"
 										control={control}
-										render={({ field }) => (
+										rules={{
+											min: {
+												value: 0,
+												message: "交通費は0以上で入力してください。",
+											},
+										}}
+										render={({ field, formState: { errors } }) => (
 											<TextField
 												{...field}
-												type="text"
+												type="number"
 												label="交通費設定 日割り"
 												sx={{
 													width: "20%",
@@ -424,6 +466,8 @@ function Input3(props: any) {
 													mr: 2,
 													mb: 1,
 												}}
+												error={errors.dailyRate ? true : false}
+												helperText={errors.dailyRate?.message as string}
 											/>
 										)}
 									/>
@@ -436,10 +480,16 @@ function Input3(props: any) {
 									<Controller
 										name="fixedMonth"
 										control={control}
-										render={({ field }) => (
+										rules={{
+											min: {
+												value: 0,
+												message: "交通費は0以上で入力してください。",
+											},
+										}}
+										render={({ field, formState: { errors } }) => (
 											<TextField
 												{...field}
-												type="text"
+												type="number"
 												label="交通費設定 月固定"
 												sx={{
 													width: "20%",
@@ -447,6 +497,8 @@ function Input3(props: any) {
 													mr: 2,
 													mb: 1,
 												}}
+												error={errors.fixedMonth ? true : false}
+												helperText={errors.fixedMonth?.message as string}
 											/>
 										)}
 									/>
@@ -458,10 +510,16 @@ function Input3(props: any) {
 									<Controller
 										name="nonPayment"
 										control={control}
-										render={({ field }) => (
+										rules={{
+											min: {
+												value: 0,
+												message: "交通費は0以上で入力してください。",
+											},
+										}}
+										render={({ field, formState: { errors } }) => (
 											<TextField
 												{...field}
-												type="text"
+												type="number"
 												label="交通費設定 不支給"
 												sx={{
 													width: "20%",
@@ -469,6 +527,8 @@ function Input3(props: any) {
 													mr: 2,
 													mb: 1,
 												}}
+												error={errors.nonPayment ? true : false}
+												helperText={errors.nonPayment?.message as string}
 											/>
 										)}
 									/>

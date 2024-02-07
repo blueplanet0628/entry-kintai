@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, FormHelperText, TextField } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
@@ -12,7 +12,7 @@ import { Gender, Role } from "@prisma/client";
 import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -100,6 +100,9 @@ function Input2(props: any) {
 		});
 	}, [props.formValue.Input2Form]);
 
+	const [inputCodeValue, setInputCodeValue] = useState<string>("");
+	const [isExistingCode, setIsExistingCode] = useState(false);
+
 	const [birthday, setBirthday] = React.useState<Dayjs | null>(null);
 	const [startDate, setStartDate] = React.useState<Dayjs | null>(null);
 	const [lastDate, setLastDate] = React.useState<Dayjs | null>(null);
@@ -112,10 +115,34 @@ function Input2(props: any) {
 			startDate: "",
 			lastDate: "",
 			retirementReason: "",
-			role: 0,
+			role: undefined,
 			isEnabled: undefined, // NOTE: デフォルト:未定義
 		},
 	});
+
+	// NOTE: Code重複確認
+	const handleCodeCheck = async (e: any) => {
+		const code = e.target.value ? e.target.value : undefined;
+		console.log(code);
+		const response = await fetch(`/api/staff/edit/${id}/codeCheck`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				id: Number(id),
+				code: code,
+			}),
+		});
+
+		const responseData = await response.json();
+		const existingCode = responseData.existingCode;
+
+		existingCode ? alert("他の従業員コードと重複しています。") : null;
+
+		setInputCodeValue(code);
+		setIsExistingCode(existingCode);
+	};
 
 	const ConversionToNumberGender = (gender: string) => {
 		if (gender === Gender.MALE) {
@@ -190,6 +217,11 @@ function Input2(props: any) {
 							>
 								<FormControlLabel value={1} control={<Radio />} label="男性" />
 								<FormControlLabel value={2} control={<Radio />} label="女性" />
+								<FormControlLabel
+									value={0}
+									control={<Radio />}
+									label="未回答"
+								/>
 							</RadioGroup>
 						</FormControl>
 					)}
@@ -197,13 +229,47 @@ function Input2(props: any) {
 				<Controller
 					name="employeeCode"
 					control={control}
-					render={({ field }) => (
-						<TextField
-							{...field}
-							sx={{ width: "30%", mt: 1, mr: 60, mb: 2 }}
-							type="text"
-							label="従業員コード"
-						/>
+					rules={{
+						required: { value: true, message: "店舗IDを入力してください。" },
+						pattern: {
+							value: /^[a-zA-Z]+[a-zA-Z0-9]*$/,
+							message:
+								"店舗IDは英字で始まる3文字以上10文字以内の半角英数字で入力してください。",
+						},
+						minLength: {
+							value: 3,
+							message:
+								"店舗IDは英字で始まる3文字以上10文字以内の半角英数字で入力してください。",
+						},
+						maxLength: {
+							value: 10,
+							message:
+								"店舗IDは英字で始まる3文字以上10文字以内の半角英数字で入力してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl sx={{ width: "30%", mt: 1, mr: 60, mb: 2 }}>
+							<TextField
+								{...field}
+								sx={{ width: "100%", mt: 1, mr: 60 }}
+								type="text"
+								label="従業員コード"
+								onBlur={handleCodeCheck}
+								error={errors.employeeCode ? true : false}
+								helperText={errors.employeeCode?.message as string}
+							/>
+							{inputCodeValue === "" || inputCodeValue === undefined ? (
+								<FormHelperText />
+							) : isExistingCode === true ? (
+								<FormHelperText sx={{ color: "red" }}>
+									重複確認:NG
+								</FormHelperText>
+							) : (
+								<FormHelperText sx={{ color: "green" }}>
+									重複確認:OK
+								</FormHelperText>
+							)}
+						</FormControl>
 					)}
 				/>
 				<Controller
@@ -261,8 +327,18 @@ function Input2(props: any) {
 				<Controller
 					name="role"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mb: 1 }} fullWidth>
+					rules={{
+						required: {
+							value: true,
+							message: "権限を選択してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ mb: 1 }}
+							fullWidth
+							error={errors.role ? true : false}
+						>
 							<FormLabel id="row-radio-buttons-group-label">権限</FormLabel>
 							<RadioGroup
 								row
@@ -292,14 +368,25 @@ function Input2(props: any) {
 									label="一般ユーザー"
 								/>
 							</RadioGroup>
+							<FormHelperText>{errors.role?.message || ""}</FormHelperText>
 						</FormControl>
 					)}
 				/>
 				<Controller
 					name="isEnabled"
 					control={control}
-					render={({ field }) => (
-						<FormControl sx={{ mt: 1, mb: 1 }} fullWidth>
+					rules={{
+						required: {
+							value: true,
+							message: "状態を選択してください。",
+						},
+					}}
+					render={({ field, formState: { errors } }) => (
+						<FormControl
+							sx={{ mt: 1, mb: 1 }}
+							fullWidth
+							error={errors.isEnabled ? true : false}
+						>
 							<FormLabel id="row-radio-buttons-group-label">状態</FormLabel>
 							<RadioGroup
 								row
@@ -316,6 +403,7 @@ function Input2(props: any) {
 								<FormControlLabel value={1} control={<Radio />} label="有効" />
 								<FormControlLabel value={0} control={<Radio />} label="無効" />
 							</RadioGroup>
+							<FormHelperText>{errors.isEnabled?.message || ""}</FormHelperText>
 						</FormControl>
 					)}
 				/>
