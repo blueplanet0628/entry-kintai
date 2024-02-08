@@ -85,11 +85,22 @@ export const POST = async (req: Request, res: NextResponse) => {
 
 		const enumGender = ConversionToEnumGender(gender);
 		// NOTE: ユーザーコードは,"B+各ユーザーのレコード数(0埋め後桁数5)"とする.
-		const codeCounts =
-			(await prismadb.user.count({
-				where: { companyId: companyId },
-			})) + 1;
-		const employeeCode = `B${codeCounts.toString().padStart(5, "0")}`;
+		//       また、ユーザーコードは一意であり,連番で振り分けたい為,既存のユーザーコードと重複した場合は+1する.
+		// TODO: 将来的に,会社単位でユーザーコードを連番にする場合は,ユーザーコードの一意性をなくし,各ユーザーごとにB00001から振り分けることにする.
+		const codeCounts = (await prismadb.userDetail.count({})) + 1;
+
+		const existingCodes = await prismadb.userDetail.findMany({
+			select: { employeeCode: true },
+		});
+		const codes = existingCodes.map((code) => {
+			return code.employeeCode;
+		});
+
+		let i = 0;
+		while (codes.includes(`B${(codeCounts + i).toString().padStart(5, "0")}`)) {
+			i++;
+		}
+		const employeeCode = `B${(codeCounts + i).toString().padStart(5, "0")}`;
 
 		const startDateValue = ConversionToDate(startDate);
 		const lastDateValue = ConversionToDate(lastDate);
