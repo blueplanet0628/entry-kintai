@@ -329,9 +329,17 @@ function Input1(props: any) {
 								/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
 							message: "メールアドレスの書式が正しくありません。",
 						},
+						validate: () => {
+							if (isExistingEmail === true) {
+								return "emailが重複しています。";
+							}
+						},
 					}}
 					render={({ field, formState: { errors } }) => (
-						<FormControl sx={{ width: "61.5%", mt: 1, mr: 2, mb: 1 }}>
+						<FormControl
+							sx={{ width: "61.5%", mt: 1, mr: 2, mb: 1 }}
+							error={errors.email ? true : false}
+						>
 							<TextField
 								{...field}
 								type="text"

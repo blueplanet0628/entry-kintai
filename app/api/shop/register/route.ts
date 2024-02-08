@@ -29,10 +29,13 @@ export const POST = async (req: Request, res: NextResponse) => {
 
 		// NOTE: 店舗コードは,"A+各店舗のレコード数(0埋め後桁数5)"とする.
 		//       また、店舗コードは一意であり,連番で振り分けたい為,既存の店舗コードと重複した場合は+1する.
-		// TODO: 将来的に,会社単位で店舗コードを連番にする場合は,店舗コードの一意性をなくし,各会社ごとにA00001から振り分けることにする.
-		const codeCounts = (await prismadb.shop.count({})) + 1;
+		const codeCounts =
+			(await prismadb.shop.count({
+				where: { companyId: companyId },
+			})) + 1;
 
 		const existingCodes = await prismadb.shop.findMany({
+			where: { companyId: companyId },
 			select: { code: true },
 		});
 		const codes = existingCodes.map((code) => {

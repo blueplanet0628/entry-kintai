@@ -100,7 +100,6 @@ function Input1(props: any) {
 	// NOTE: Code重複確認
 	const handleCodeCheck = async (e: any) => {
 		const code = e.target.value ? e.target.value : undefined;
-		console.log(code);
 		const response = await fetch(`/api/shop/edit/${id}/codeCheck`, {
 			method: "POST",
 			headers: {
@@ -149,12 +148,20 @@ function Input1(props: any) {
 							message:
 								"店舗IDは英字で始まる3文字以上10文字以内の半角英数字で入力してください。",
 						},
+						validate: () => {
+							if (isExistingCode === true) {
+								return "店舗IDが重複しています。";
+							}
+						},
 					}}
 					render={({ field, formState: { errors } }) => (
-						<FormControl sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}>
+						<FormControl
+							sx={{ width: "30%", mt: 1, mr: 2, mb: 1 }}
+							error={errors.code ? true : false}
+						>
 							<TextField
 								{...field}
-								sx={{ width: "100%", mt: 1, mr: 100, mb: 1 }}
+								sx={{ width: "100%", mt: 1, mr: 100 }}
 								type="text"
 								label="店舗ID"
 								onBlur={handleCodeCheck}

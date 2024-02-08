@@ -62,7 +62,7 @@ model Company {
 model Shop {
   id                 Int        @id @default(autoincrement())
   companyId          Int        @map("company_id")
-  code               String     @db.VarChar(10) @unique
+  code               String     @db.VarChar(10)
   type               Int        @db.TinyInt()
   name               String     @db.VarChar(255)
   phoneNumber1       String     @db.VarChar(13) @map("phone_number1")
@@ -130,7 +130,7 @@ model UserDetail {
   phoneNumber2         String?           @db.VarChar(13) @map("phone_number2")
   birthday             DateTime?         @db.Date
   gender               Gender?
-  employeeCode         String            @db.VarChar(10) @map("employee_code") @unique
+  employeeCode         String            @db.VarChar(10) @map("employee_code")
   startDate            DateTime?         @db.Date @map("start_date")
   lastDate             DateTime?         @db.Date @map("last_date")
   retirementReason     String?           @db.Text @map("retirement_reason")

@@ -6,8 +6,20 @@ export const POST = async (req: Request, res: NextResponse) => {
 	try {
 		const { id, code } = await req.json();
 
-		const userDetail = await prismadb.userDetail.findUnique({
-			where: { employeeCode: code },
+		const companyId = await prismadb.user.findFirst({
+			where: { id: id },
+			select: {
+				companyId: true,
+			},
+		});
+
+		const userDetail = await prismadb.userDetail.findFirst({
+			where: {
+				employeeCode: code,
+				user: {
+					companyId: companyId?.companyId,
+				},
+			},
 			select: {
 				userId: true,
 				employeeCode: true,

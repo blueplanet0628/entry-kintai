@@ -6,8 +6,15 @@ export const POST = async (req: Request, res: NextResponse) => {
 	try {
 		const { id, code } = await req.json();
 
-		const shop = await prismadb.shop.findUnique({
-			where: { code: code },
+		const companyId = await prismadb.shop.findFirst({
+			where: { id: id },
+			select: {
+				companyId: true,
+			},
+		});
+
+		const shop = await prismadb.shop.findFirst({
+			where: { companyId: companyId?.companyId, code: code },
 			select: {
 				id: true,
 				code: true,
