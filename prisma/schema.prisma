@@ -23,29 +23,39 @@ enum EmploymentStatus {
   FULL_TIME
   TEMPORARY
   SUBCONTRACTING
+
+  @@map("employment_status_enum")
 }
 
 enum Gender {
   MALE
   FEMALE
   UNANSWERED
+
+  @@map("gender_enum")
 }
 
 enum Wage {
   HOURLY
   DAILY
   MONTHLY
+
+  @@map("wage_enum")
 }
 
 enum FareSetting {
   DAILY
   MONTHLY
   NON
+
+  @@map("fare_setting_enum")
 }
 
 enum BankAccountType {
   SAVING
   CHECKING
+
+  @@map("bank_account_type_enum")
 }
 
 model Company {
