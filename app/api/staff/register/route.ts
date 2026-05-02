@@ -71,7 +71,22 @@ export const POST = async (req: Request, res: NextResponse) => {
 		} = await req.json();
 
 		// NOTE: Format User Table Data
-		const companyId = Number(session?.user?.companyId);
+		if (!session?.user?.companyId) {
+			return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+		}
+		const companyId = Number(session.user.companyId);
+		if (!Number.isInteger(companyId) || companyId <= 0) {
+			return NextResponse.json({ message: "Invalid companyId" }, { status: 400 });
+		}
+		if (!Array.isArray(shopId) || shopId.length === 0) {
+			return NextResponse.json({ message: "shopId is required" }, { status: 400 });
+		}
+		if (!email || !password || !lastName || !firstName) {
+			return NextResponse.json(
+				{ message: "Missing required fields in request body" },
+				{ status: 400 },
+			);
+		}
 		const name = `${lastName} ${firstName}`;
 		const hashedPassword = await bcrypt.hash(password, 12);
 		const enumRole = ConversionToEnumRole(role);
@@ -80,7 +95,6 @@ export const POST = async (req: Request, res: NextResponse) => {
 		const enumEmploymentStatus =
 			ConversionToEnumEmploymentStatus(employmentStatus);
 		// NOTE: 誕生日はNULLを許可していないので,関数の結果がnullだった場合,フォームから受け取った値をセットする.
-		const tmpBirthdayValue = ConversionToDate(birthday);
 		const birthdayValue = ConversionToDate(birthday);
 
 		const enumGender = ConversionToEnumGender(gender);
@@ -190,7 +204,11 @@ export const POST = async (req: Request, res: NextResponse) => {
 
 		return NextResponse.json({ insertedData }, { status: 201 });
 	} catch (err: any) {
-		return NextResponse.json({ message: err.message }, { status: 500 });
+		console.error("[api/staff/register] failed", err);
+		return NextResponse.json(
+			{ message: err?.message || "Failed to register staff" },
+			{ status: 500 },
+		);
 	}
 };
 
