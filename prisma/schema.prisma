@@ -14,6 +14,8 @@ enum Role {
   ADMIN
   SHOP_ADMIN
   USER
+
+  @@map("role_enum")
 }
 
 enum EmploymentStatus {
